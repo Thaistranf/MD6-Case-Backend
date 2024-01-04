@@ -54,6 +54,35 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @PostMapping("/suppliers/register")
+    public ResponseEntity<Object> createSupplier(@RequestBody User user, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+
+        Iterable<User> users = userService.findAll();
+        for (User currentUser : users) {
+            if (currentUser.getUsername().equals(user.getUsername())) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        if (!userService.isCorrectConfirmPassword(user)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (user.getRoles() == null) {
+            Role role = roleService.findByName("ROLE_SUPPLIER");
+            Set<Role> roles = new HashSet<>();
+            roles.add(role);
+            user.setRoles(roles);
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setConfirmPassword(passwordEncoder.encode(user.getConfirmPassword()));
+        userService.save(user);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<Object> createUser(@RequestBody User user, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors()) {
@@ -61,7 +90,7 @@ public class UserController {
         }
 
 
-            Iterable<User> users = userService.findAll();
+        Iterable<User> users = userService.findAll();
         for (User currentUser : users) {
             if (currentUser.getUsername().equals(user.getUsername())) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -90,12 +119,19 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtService.generateTokenLogin(authentication);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User currentUser = userService.findByUsername(user.getUsername());
-        return ResponseEntity.ok(new JwtResponse(jwt, currentUser.getId(), userDetails.getUsername(), userDetails.getAuthorities()));
+        try {
+            System.out.println(user.getUsername());
+            System.out.println(user.getPassword());
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtService.generateTokenLogin(authentication);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            User currentUser = userService.findByUsername(user.getUsername());
+            return ResponseEntity.ok(new JwtResponse(jwt, currentUser.getId(), userDetails.getUsername(), userDetails.getAuthorities()));
+        } catch (Exception e) {
+            return ResponseEntity.ok(e);
+        }
+
     }
 
     @GetMapping("/hello")
