@@ -17,4 +17,5 @@ public interface SupplierService extends UserDetailsService {
     UserDetails loadSupplierById(Long id);
     Supplier getCurrentSupplier();
     Supplier findBySupplierName(String supplierName);
+    Iterable<Supplier> searchSupplierByName(String name);
 }

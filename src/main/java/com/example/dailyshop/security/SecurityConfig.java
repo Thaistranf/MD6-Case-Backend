@@ -4,7 +4,9 @@ package com.example.dailyshop.security;
 import com.example.dailyshop.security.jwt.CustomAccessDeniedHandler;
 import com.example.dailyshop.security.jwt.JwtAuthenticationFilter;
 import com.example.dailyshop.security.jwt.RestAuthenticationEntryPoint;
+import com.example.dailyshop.service.SupplierService;
 import com.example.dailyshop.service.UserService;
+import com.example.dailyshop.service.impl.SupplierServiceImpl;
 import com.example.dailyshop.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +31,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+    @Bean
+    public SupplierService supplierService() {
+        return new SupplierServiceImpl();
+    }
+    @Autowired
+    private SupplierService supplierService;
 
     @Bean
     public UserService userService() {
@@ -56,6 +64,13 @@ public class SecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
+    @Bean
+    public AuthenticationProvider authenticationProvider1() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(supplierService());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
 
     @Bean
     public RestAuthenticationEntryPoint restServicesEntryPoint() {
@@ -78,9 +93,9 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/login", "/register", "/suppliers/register", "/hello","/images/**","/categories/**","/comments/**","/likes/**").permitAll()
-                                .requestMatchers("/users/**","/album/**","/likes/**","/images/display/**").hasAnyAuthority("ROLE_USER")
-                                .requestMatchers("/admin/**","/likes/**").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers("/login", "/register", "/suppliers/register", "/suppliers/login","/hello").permitAll()
+                                .requestMatchers("/users/**").hasAnyAuthority("ROLE_USER")
+                                .requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers("/suppliers/**").hasAnyAuthority("ROLE_SUPPLIER")
 //                        .requestMatchers(HttpMethod.GET).hasAnyRole("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 //                        .requestMatchers(HttpMethod.DELETE, "/categories",

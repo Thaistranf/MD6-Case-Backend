@@ -92,6 +92,11 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
+    public Iterable<Supplier> searchSupplierByName(String name) {
+        return supplierRepository.findBySupplierNameContainingIgnoreCase(name);
+    }
+
+    @Override
     @Transactional
     public UserDetails loadUserByUsername(String supplierName) {
         Supplier supplier = supplierRepository.findBySupplierName(supplierName);
@@ -109,4 +114,5 @@ public class SupplierServiceImpl implements SupplierService {
                 supplier.getPassword(), enable, accountNonExpired, credentialsNonExpired,
                 accountNonLocked, null);
     }
+
 }
