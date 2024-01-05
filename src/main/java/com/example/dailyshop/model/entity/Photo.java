@@ -1,15 +1,15 @@
-package com.example.dailyshop.model;
+package com.example.dailyshop.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
-public class Category {
+public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long photoID;
     @Column(nullable = false)
-    private String name;
+    private String photoName;
 
 }

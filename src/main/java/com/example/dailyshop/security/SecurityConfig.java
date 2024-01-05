@@ -6,7 +6,6 @@ import com.example.dailyshop.security.jwt.JwtAuthenticationFilter;
 import com.example.dailyshop.security.jwt.RestAuthenticationEntryPoint;
 import com.example.dailyshop.service.UserService;
 import com.example.dailyshop.service.impl.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,10 +33,6 @@ public class SecurityConfig {
     public UserService userService() {
         return new UserServiceImpl();
     }
-
-
-    @Autowired
-    private UserService userService;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
@@ -78,9 +73,9 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                                    .requestMatchers("/login", "/register", "/suppliers/**", "/hello","/images/**","/categories/**","/comments/**","/likes/**").permitAll()
-                                .requestMatchers("/users/**","/album/**","/likes/**","/images/display/**").hasAnyAuthority("ROLE_USER")
-                                .requestMatchers("/admin/**","/likes/**").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers("/login", "/register", "/suppliers/register").permitAll()
+                                .requestMatchers("/customer/**").hasAnyAuthority("ROLE_CUSTOMER")
+                                .requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers("/suppliers/**").hasAnyAuthority("ROLE_SUPPLIER")
 //                        .requestMatchers(HttpMethod.GET).hasAnyRole("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 //                        .requestMatchers(HttpMethod.DELETE, "/categories",
