@@ -1,7 +1,7 @@
 package com.example.dailyshop.service.impl;
 
 
-import com.example.dailyshop.model.account.UserPrinciple;
+import com.example.dailyshop.model.account.AccountPrinciple;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
@@ -20,7 +20,7 @@ public class JwtService {
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class.getName());
 
     public String generateTokenLogin(Authentication authentication) {
-        UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
+        AccountPrinciple userPrincipal = (AccountPrinciple) authentication.getPrincipal();
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())

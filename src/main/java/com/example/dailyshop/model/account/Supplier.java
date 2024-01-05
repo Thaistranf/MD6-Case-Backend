@@ -18,13 +18,13 @@ public class Supplier {
     private String imageSupplier;
 
     @ManyToOne
-    private User user;
+    private Account account;
 
-    public Supplier(String supplierName, LocalDate registrationDate, String imageSupplier, User user) {
+    public Supplier(String supplierName, LocalDate registrationDate, String imageSupplier, Account account) {
         this.supplierName = supplierName;
         this.registrationDate = registrationDate;
         this.imageSupplier = imageSupplier;
-        this.user = user;
+        this.account = account;
     }
 
     public Supplier() {
@@ -65,11 +65,11 @@ public class Supplier {
         this.imageSupplier = imageSupplier;
     }
 
-    public User getUser() {
-        return user;
+    public Account getUser() {
+        return account;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Account account) {
+        this.account = account;
     }
 }
