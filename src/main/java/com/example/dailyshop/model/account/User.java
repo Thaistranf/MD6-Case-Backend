@@ -26,9 +26,6 @@ public class User implements Serializable {
     @Column(nullable = false, unique = true)
     @Email(message = "Email không hợp lệ")
     private String email;
-
-    private String dateOfBirth;
-    private String imageUser;
     private boolean enabled = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -37,13 +34,11 @@ public class User implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles;
 
-    public User(String username, String password, String confirmPassword, String email, String dateOfBirth, String imageUser, boolean enabled, Set<Role> roles) {
+    public User(String username, String password, String confirmPassword, String email, boolean enabled, Set<Role> roles) {
         this.username = username;
         this.password = password;
         this.confirmPassword = confirmPassword;
         this.email = email;
-        this.dateOfBirth = dateOfBirth;
-        this.imageUser = imageUser;
         this.enabled = enabled;
         this.roles = roles;
     }
@@ -95,28 +90,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
     public Set<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public String getImageUser() {
-        return imageUser;
-    }
-
-    public void setImageUser(String imageUser) {
-        this.imageUser = imageUser;
     }
 
     public boolean isEnabled() {

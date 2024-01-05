@@ -2,8 +2,10 @@ package com.example.dailyshop.controller;
 
 import com.example.dailyshop.model.account.JwtResponse;
 import com.example.dailyshop.model.account.Role;
+import com.example.dailyshop.model.account.Supplier;
 import com.example.dailyshop.model.account.User;
 import com.example.dailyshop.service.RoleService;
+import com.example.dailyshop.service.SupplierService;
 import com.example.dailyshop.service.UserService;
 import com.example.dailyshop.service.impl.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +37,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SupplierService supplierService;
 
     @Autowired
     private RoleService roleService;
@@ -55,7 +61,38 @@ public class UserController {
     }
 
     @PostMapping("/suppliers/register")
-    public ResponseEntity<Object> createSupplier(@RequestBody User user, BindingResult bindingResult) {
+    public ResponseEntity<Object> createSupplier(@RequestBody User account, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Iterable<User> suppliers = userService.findAll();
+        for (User currentSupplier : suppliers) {
+            if (currentSupplier.getUsername().equals(account.getUsername())) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        if (!userService.isCorrectConfirmPassword(account)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Role role = roleService.findByName("ROLE_SUPPLIER");
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+        account.setRoles(roles);
+
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        account.setConfirmPassword(passwordEncoder.encode(account.getConfirmPassword()));
+
+        User accountSupplier = userService.save(account);
+
+        Supplier supplier = new Supplier();
+        supplier.setUser(accountSupplier);
+        supplier.setRegistrationDate(LocalDate.now());
+        Supplier supplier1 = supplierService.save(supplier);
+        return new ResponseEntity<>(supplier1, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<Object> createUser(@RequestBody User user, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -70,42 +107,13 @@ public class UserController {
         if (!userService.isCorrectConfirmPassword(user)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (user.getRoles() == null) {
-            Role role = roleService.findByName("ROLE_SUPPLIER");
-            Set<Role> roles = new HashSet<>();
-            roles.add(role);
-            user.setRoles(roles);
-        }
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setConfirmPassword(passwordEncoder.encode(user.getConfirmPassword()));
-        userService.save(user);
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<Object> createUser(@RequestBody User user, BindingResult bindingResult) {
-        if (bindingResult.hasFieldErrors()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-
-            Iterable<User> users = userService.findAll();
-        for (User currentUser : users) {
-            if (currentUser.getUsername().equals(user.getUsername())) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }
-        if (!userService.isCorrectConfirmPassword(user)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
         if (user.getRoles() != null) {
             Role role = roleService.findByName("ROLE_ADMIN");
             Set<Role> roles = new HashSet<>();
             roles.add(role);
             user.setRoles(roles);
-        } else {
-            Role role1 = roleService.findByName("ROLE_USER");
+        } else if (user.getRoles() == null) {
+            Role role1 = roleService.findByName("ROLE_CUSTOMER");
             Set<Role> roles1 = new HashSet<>();
             roles1.add(role1);
             user.setRoles(roles1);
@@ -147,12 +155,10 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         user1.setUsername(user.getUsername());
-        user1.setDateOfBirth(user.getDateOfBirth());
         user1.setEmail(user.getEmail());
         user1.setPassword(user1.getPassword());
         user1.setConfirmPassword(user1.getConfirmPassword());
         user1.setRoles(user1.getRoles());
-        user1.setImageUser(user1.getImageUser());
         userService.save(user1);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -166,12 +172,10 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         user1.setUsername(user1.getUsername());
-        user1.setDateOfBirth(user1.getDateOfBirth());
         user1.setEmail(user1.getEmail());
         user1.setPassword(user1.getPassword());
         user1.setConfirmPassword(user1.getConfirmPassword());
         user1.setRoles(user1.getRoles());
-        user1.setImageUser(user.getImageUser());
         userService.save(user1);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
