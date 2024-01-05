@@ -3,10 +3,10 @@ package com.example.dailyshop.controller;
 import com.example.dailyshop.model.account.JwtResponse;
 import com.example.dailyshop.model.account.Role;
 import com.example.dailyshop.model.account.Supplier;
-import com.example.dailyshop.model.account.User;
+import com.example.dailyshop.model.account.Account;
+import com.example.dailyshop.service.AccountService;
 import com.example.dailyshop.service.RoleService;
 import com.example.dailyshop.service.SupplierService;
-import com.example.dailyshop.service.UserService;
 import com.example.dailyshop.service.impl.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +36,7 @@ public class UserController {
     private JwtService jwtService;
 
     @Autowired
-    private UserService userService;
+    private AccountService accountService;
 
     @Autowired
     private SupplierService supplierService;
@@ -49,29 +49,29 @@ public class UserController {
 
 
     @GetMapping("/users")
-    public ResponseEntity<Iterable<User>> showAllUser() {
-        Iterable<User> users = userService.findAll();
+    public ResponseEntity<Iterable<Account>> showAllUser() {
+        Iterable<Account> users = accountService.findAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/admin/users")
-    public ResponseEntity<Iterable<User>> showAllUserByAdmin() {
-        Iterable<User> users = userService.findAll();
+    public ResponseEntity<Iterable<Account>> showAllUserByAdmin() {
+        Iterable<Account> users = accountService.findAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PostMapping("/suppliers/register")
-    public ResponseEntity<Object> createSupplier(@RequestBody User account, BindingResult bindingResult) {
+    public ResponseEntity<Object> createSupplier(@RequestBody Account account, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Iterable<User> suppliers = userService.findAll();
-        for (User currentSupplier : suppliers) {
-            if (currentSupplier.getUsername().equals(account.getUsername())) {
+        Iterable<Account> suppliers = accountService.findAll();
+        for (Account currentSupplier : suppliers) {
+            if (currentSupplier.getAccount().equals(account.getAccount())) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
-        if (!userService.isCorrectConfirmPassword(account)) {
+        if (!accountService.isCorrectConfirmPassword(account)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Role role = roleService.findByName("ROLE_SUPPLIER");
@@ -82,7 +82,7 @@ public class UserController {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         account.setConfirmPassword(passwordEncoder.encode(account.getConfirmPassword()));
 
-        User accountSupplier = userService.save(account);
+        Account accountSupplier = accountService.save(account);
 
         Supplier supplier = new Supplier();
         supplier.setUser(accountSupplier);
@@ -92,47 +92,47 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> createUser(@RequestBody User user, BindingResult bindingResult) {
+    public ResponseEntity<Object> createUser(@RequestBody Account account, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
 
-        Iterable<User> users = userService.findAll();
-        for (User currentUser : users) {
-            if (currentUser.getUsername().equals(user.getUsername())) {
+        Iterable<Account> users = accountService.findAll();
+        for (Account currentAccount : users) {
+            if (currentAccount.getAccount().equals(account.getAccount())) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
-        if (!userService.isCorrectConfirmPassword(user)) {
+        if (!accountService.isCorrectConfirmPassword(account)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (user.getRoles() != null) {
+        if (account.getRoles() != null) {
             Role role = roleService.findByName("ROLE_ADMIN");
             Set<Role> roles = new HashSet<>();
             roles.add(role);
-            user.setRoles(roles);
-        } else if (user.getRoles() == null) {
+            account.setRoles(roles);
+        } else if (account.getRoles() == null) {
             Role role1 = roleService.findByName("ROLE_CUSTOMER");
             Set<Role> roles1 = new HashSet<>();
             roles1.add(role1);
-            user.setRoles(roles1);
+            account.setRoles(roles1);
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setConfirmPassword(passwordEncoder.encode(user.getConfirmPassword()));
-        userService.save(user);
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        account.setConfirmPassword(passwordEncoder.encode(account.getConfirmPassword()));
+        accountService.save(account);
+        return new ResponseEntity<>(account, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+    public ResponseEntity<?> login(@RequestBody Account account) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(account.getAccount(), account.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtService.generateTokenLogin(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User currentUser = userService.findByUsername(user.getUsername());
-        return ResponseEntity.ok(new JwtResponse(jwt, currentUser.getId(), userDetails.getUsername(), userDetails.getAuthorities()));
+        Account currentAccount = accountService.findByAccount(account.getAccount());
+        return ResponseEntity.ok(new JwtResponse(jwt, currentAccount.getId(), userDetails.getUsername(), userDetails.getAuthorities()));
     }
 
     @GetMapping("/hello")
@@ -141,53 +141,53 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getProfile(@PathVariable Long id) {
-        Optional<User> userOptional = this.userService.findById(id);
-        return userOptional.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<Account> getProfile(@PathVariable Long id) {
+        Optional<Account> accountOptional = this.accountService.findById(id);
+        return accountOptional.map(account -> new ResponseEntity<>(account, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateUserProfile(@PathVariable Long id, @RequestBody User user) {
-        user.setId(id);
-        Optional<User> userOptional = this.userService.findById(id);
-        User user1 = userOptional.get();
-        if (!userOptional.isPresent()) {
+    public ResponseEntity<Account> updateUserProfile(@PathVariable Long id, @RequestBody Account account) {
+        account.setId(id);
+        Optional<Account> accountOptional = this.accountService.findById(id);
+        Account account1 = accountOptional.get();
+        if (!accountOptional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        user1.setUsername(user.getUsername());
-        user1.setEmail(user.getEmail());
-        user1.setPassword(user1.getPassword());
-        user1.setConfirmPassword(user1.getConfirmPassword());
-        user1.setRoles(user1.getRoles());
-        userService.save(user1);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        account1.setAccount(account.getAccount());
+        account1.setEmail(account.getEmail());
+        account1.setPassword(account1.getPassword());
+        account1.setConfirmPassword(account1.getConfirmPassword());
+        account1.setRoles(account1.getRoles());
+        accountService.save(account1);
+        return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
     @PutMapping("/users/avatar/{id}")
-    public ResponseEntity<User> updateUserAvatar(@PathVariable Long id, @RequestBody User user) {
-        user.setId(id);
-        Optional<User> userOptional = this.userService.findById(id);
-        User user1 = userOptional.get();
-        if (!userOptional.isPresent()) {
+    public ResponseEntity<Account> updateUserAvatar(@PathVariable Long id, @RequestBody Account account) {
+        account.setId(id);
+        Optional<Account> accountOptional = this.accountService.findById(id);
+        Account account1 = accountOptional.get();
+        if (!accountOptional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        user1.setUsername(user1.getUsername());
-        user1.setEmail(user1.getEmail());
-        user1.setPassword(user1.getPassword());
-        user1.setConfirmPassword(user1.getConfirmPassword());
-        user1.setRoles(user1.getRoles());
-        userService.save(user1);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        account1.setAccount(account1.getAccount());
+        account1.setEmail(account1.getEmail());
+        account1.setPassword(account1.getPassword());
+        account1.setConfirmPassword(account1.getConfirmPassword());
+        account1.setRoles(account1.getRoles());
+        accountService.save(account1);
+        return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<User>> searchUser(@RequestParam String name) {
-        List<User> userList = (List<User>) userService.searchUserByName(name);
-        if (userList == null) {
-            List<User> users = (List<User>) userService.findAll();
-            return new ResponseEntity<>(users, HttpStatus.OK);
+    public ResponseEntity<List<Account>> searchUser(@RequestParam String name) {
+        List<Account> accountList = (List<Account>) accountService.searchAccountByName(name);
+        if (accountList == null) {
+            List<Account> accounts = (List<Account>) accountService.findAll();
+            return new ResponseEntity<>(accounts, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(userList, HttpStatus.OK);
+            return new ResponseEntity<>(accountList, HttpStatus.OK);
         }
     }
 }

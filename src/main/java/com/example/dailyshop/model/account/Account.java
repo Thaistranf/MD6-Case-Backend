@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@Table(name = "userTable")
-public class User implements Serializable {
+@Table(name = "accountTable")
+public class Account implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -16,7 +16,7 @@ public class User implements Serializable {
     private Long id;
 
     @Column(unique = true, nullable = false)
-        private String username;
+        private String account;
 
     @Column(nullable = false)
     private String password;
@@ -29,13 +29,13 @@ public class User implements Serializable {
     private boolean enabled = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
-            joinColumns = {@JoinColumn(name = "user_id")},
+    @JoinTable(name = "account_role",
+            joinColumns = {@JoinColumn(name = "account_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles;
 
-    public User(String username, String password, String confirmPassword, String email, boolean enabled, Set<Role> roles) {
-        this.username = username;
+    public Account(String account, String password, String confirmPassword, String email, boolean enabled, Set<Role> roles) {
+        this.account = account;
         this.password = password;
         this.confirmPassword = confirmPassword;
         this.email = email;
@@ -43,7 +43,7 @@ public class User implements Serializable {
         this.roles = roles;
     }
 
-    public User() {
+    public Account() {
     }
 
     public static long getSerialVersionUID() {
@@ -58,12 +58,12 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getAccount() {
+        return account;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public String getPassword() {

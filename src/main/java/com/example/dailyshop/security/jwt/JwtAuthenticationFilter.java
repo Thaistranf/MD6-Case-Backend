@@ -1,6 +1,6 @@
 package com.example.dailyshop.security.jwt;
 
-import com.example.dailyshop.service.UserService;
+import com.example.dailyshop.service.AccountService;
 import com.example.dailyshop.service.impl.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,7 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    private UserService userService;
+    private AccountService accountService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String jwt = getJwtFromRequest(request);
             if (jwt != null && jwtService.validateJwtToken(jwt)) {
                 String username = jwtService.getUserNameFromJwtToken(jwt);
-                UserDetails userDetails = userService.loadUserByUsername(username);
+                UserDetails userDetails = accountService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);

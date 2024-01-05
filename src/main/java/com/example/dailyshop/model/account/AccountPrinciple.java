@@ -9,30 +9,30 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class UserPrinciple implements UserDetails {
+public class AccountPrinciple implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private String username;
+    private String account;
 
     private String password;
 
     private Collection<? extends GrantedAuthority> roles;
 
-    public UserPrinciple(Long id, String username, String password, Collection<? extends GrantedAuthority> roles) {
+    public AccountPrinciple(Long id, String account, String password, Collection<? extends GrantedAuthority> roles) {
         this.id = id;
-        this.username = username;
+        this.account = account;
         this.password = password;
         this.roles = roles;
     }
 
-    public static UserPrinciple build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
-        return new UserPrinciple(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
+    public static AccountPrinciple build(Account account) {
+        List<GrantedAuthority> authorities = account.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+        return new AccountPrinciple(
+                account.getId(),
+                account.getAccount(),
+                account.getPassword(),
                 authorities
         );
     }
@@ -43,7 +43,7 @@ public class UserPrinciple implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return account;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class UserPrinciple implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserPrinciple user = (UserPrinciple) o;
+        AccountPrinciple user = (AccountPrinciple) o;
         return Objects.equals(id, user.id);
     }
 
