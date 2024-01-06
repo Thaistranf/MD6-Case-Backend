@@ -3,6 +3,8 @@ package com.example.dailyshop.model.account;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -14,7 +16,7 @@ public class Customer {
 
     private String customerName;
 
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     private String address;
 
@@ -23,16 +25,19 @@ public class Customer {
 
     private String imageCustomer;
 
+    private LocalDateTime editCustomerTime;
+
     @ManyToOne
     private Account account;
 
-    public Customer(Long id, String customerName, Date dateOfBirth, String address, String phone, String imageCustomer, Account account) {
+    public Customer(Long id, String customerName, LocalDate dateOfBirth, String address, String phone, String imageCustomer, LocalDateTime editCustomerTime, Account account) {
         this.id = id;
         this.customerName = customerName;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
         this.phone = phone;
         this.imageCustomer = imageCustomer;
+        this.editCustomerTime = editCustomerTime;
         this.account = account;
     }
 
@@ -55,11 +60,11 @@ public class Customer {
         this.customerName = customerName;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -85,6 +90,14 @@ public class Customer {
 
     public void setImageCustomer(String imageCustomer) {
         this.imageCustomer = imageCustomer;
+    }
+
+    public LocalDateTime getEditCustomerTime() {
+        return editCustomerTime;
+    }
+
+    public void setEditCustomerTime(LocalDateTime editCustomerTime) {
+        this.editCustomerTime = editCustomerTime;
     }
 
     public Account getAccount() {

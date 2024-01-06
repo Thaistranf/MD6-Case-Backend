@@ -9,4 +9,5 @@ public interface CustomerService {
     Optional<Customer> findById(Long id);
     Customer save(Customer customer);
     Iterable<Customer> searchCustomerByName(String name);
+    Optional<Customer> findByAccountId(Long id);
 }

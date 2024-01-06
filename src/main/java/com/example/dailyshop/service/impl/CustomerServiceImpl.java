@@ -31,4 +31,10 @@ public class CustomerServiceImpl implements CustomerService {
     public Iterable<Customer> searchCustomerByName(String name) {
         return customerRepository.findByCustomerNameContainingIgnoreCase(name);
     }
+
+    @Override
+    public Optional<Customer> findByAccountId(Long id) {
+        return customerRepository.findByAccount_Id(id);
+    }
+
 }
