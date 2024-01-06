@@ -1,10 +1,8 @@
 package com.example.dailyshop.controller;
 
-import com.example.dailyshop.model.account.JwtResponse;
-import com.example.dailyshop.model.account.Role;
-import com.example.dailyshop.model.account.Supplier;
-import com.example.dailyshop.model.account.Account;
+import com.example.dailyshop.model.account.*;
 import com.example.dailyshop.service.AccountService;
+import com.example.dailyshop.service.CustomerService;
 import com.example.dailyshop.service.RoleService;
 import com.example.dailyshop.service.SupplierService;
 import com.example.dailyshop.service.impl.JwtService;
@@ -43,6 +41,9 @@ public class AccountController {
     private SupplierService supplierService;
 
     @Autowired
+    private CustomerService customerService;
+
+    @Autowired
     private RoleService roleService;
 
     @Autowired
@@ -66,8 +67,8 @@ public class AccountController {
         if (bindingResult.hasFieldErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Iterable<Account> suppliers = accountService.findAll();
-        for (Account currentSupplier : suppliers) {
+        Iterable<Account> accounts = accountService.findAll();
+        for (Account currentSupplier : accounts) {
             if (currentSupplier.getAccount().equals(account.getAccount())) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -92,15 +93,13 @@ public class AccountController {
         return new ResponseEntity<>(supplier1, HttpStatus.CREATED);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<Object> createUser(@RequestBody Account account, BindingResult bindingResult) {
+    @PostMapping("/customer/register")
+    public ResponseEntity<Object> createCustomer(@RequestBody Account account, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-
-        Iterable<Account> users = accountService.findAll();
-        for (Account currentAccount : users) {
+        Iterable<Account> accounts = accountService.findAll();
+        for (Account currentAccount : accounts) {
             if (currentAccount.getAccount().equals(account.getAccount())) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -108,17 +107,45 @@ public class AccountController {
         if (!accountService.isCorrectConfirmPassword(account)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (account.getRoles() != null) {
-            Role role = roleService.findByName("ROLE_ADMIN");
-            Set<Role> roles = new HashSet<>();
-            roles.add(role);
-            account.setRoles(roles);
-        } else if (account.getRoles() == null) {
-            Role role1 = roleService.findByName("ROLE_CUSTOMER");
-            Set<Role> roles1 = new HashSet<>();
-            roles1.add(role1);
-            account.setRoles(roles1);
+        Role role = roleService.findByName("ROLE_CUSTOMER");
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+        account.setRoles(roles);
+
+        account.setRegistrationTime(LocalDateTime.now());
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        account.setConfirmPassword(passwordEncoder.encode(account.getConfirmPassword()));
+
+        Account accountCustomer = accountService.save(account);
+
+        Customer customer = new Customer();
+        customer.setAccount(accountCustomer);
+        Customer customer1 = customerService.save(customer);
+        return new ResponseEntity<>(customer1, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<Object> createUser(@RequestBody Account account, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+
+        Iterable<Account> accounts = accountService.findAll();
+        for (Account currentAccount : accounts) {
+            if (currentAccount.getAccount().equals(account.getAccount())) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        if (!accountService.isCorrectConfirmPassword(account)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Role role = roleService.findByName("ROLE_ADMIN");
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+        account.setRoles(roles);
+
 
         account.setRegistrationTime(LocalDateTime.now());
         account.setPassword(passwordEncoder.encode(account.getPassword()));
