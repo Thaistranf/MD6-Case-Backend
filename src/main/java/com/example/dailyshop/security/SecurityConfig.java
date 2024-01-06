@@ -4,8 +4,8 @@ package com.example.dailyshop.security;
 import com.example.dailyshop.security.jwt.CustomAccessDeniedHandler;
 import com.example.dailyshop.security.jwt.JwtAuthenticationFilter;
 import com.example.dailyshop.security.jwt.RestAuthenticationEntryPoint;
-import com.example.dailyshop.service.UserService;
-import com.example.dailyshop.service.impl.UserServiceImpl;
+import com.example.dailyshop.service.AccountService;
+import com.example.dailyshop.service.impl.AccountServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,8 +30,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-    public UserService userService() {
-        return new UserServiceImpl();
+    public AccountService accountService() {
+        return new AccountServiceImpl();
     }
 
     @Bean
@@ -47,7 +47,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userService());
+        authenticationProvider.setUserDetailsService(accountService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
