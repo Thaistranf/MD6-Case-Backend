@@ -21,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ import java.util.Set;
 
 @RestController
 @CrossOrigin("*")
-public class UserController {
+public class AccountController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -79,14 +80,14 @@ public class UserController {
         roles.add(role);
         account.setRoles(roles);
 
+        account.setRegistrationTime(LocalDateTime.now());
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         account.setConfirmPassword(passwordEncoder.encode(account.getConfirmPassword()));
 
         Account accountSupplier = accountService.save(account);
 
         Supplier supplier = new Supplier();
-        supplier.setUser(accountSupplier);
-        supplier.setRegistrationDate(LocalDate.now());
+        supplier.setAccount(accountSupplier);
         Supplier supplier1 = supplierService.save(supplier);
         return new ResponseEntity<>(supplier1, HttpStatus.CREATED);
     }
@@ -119,6 +120,7 @@ public class UserController {
             account.setRoles(roles1);
         }
 
+        account.setRegistrationTime(LocalDateTime.now());
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         account.setConfirmPassword(passwordEncoder.encode(account.getConfirmPassword()));
         accountService.save(account);
@@ -163,22 +165,22 @@ public class UserController {
         return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
-    @PutMapping("/users/avatar/{id}")
-    public ResponseEntity<Account> updateUserAvatar(@PathVariable Long id, @RequestBody Account account) {
-        account.setId(id);
-        Optional<Account> accountOptional = this.accountService.findById(id);
-        Account account1 = accountOptional.get();
-        if (!accountOptional.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        account1.setAccount(account1.getAccount());
-        account1.setEmail(account1.getEmail());
-        account1.setPassword(account1.getPassword());
-        account1.setConfirmPassword(account1.getConfirmPassword());
-        account1.setRoles(account1.getRoles());
-        accountService.save(account1);
-        return new ResponseEntity<>(account, HttpStatus.OK);
-    }
+//    @PutMapping("/users/avatar/{id}")
+//    public ResponseEntity<Account> updateUserAvatar(@PathVariable Long id, @RequestBody Account account) {
+//        account.setId(id);
+//        Optional<Account> accountOptional = this.accountService.findById(id);
+//        Account account1 = accountOptional.get();
+//        if (!accountOptional.isPresent()) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        account1.setAccount(account1.getAccount());
+//        account1.setEmail(account1.getEmail());
+//        account1.setPassword(account1.getPassword());
+//        account1.setConfirmPassword(account1.getConfirmPassword());
+//        account1.setRoles(account1.getRoles());
+//        accountService.save(account1);
+//        return new ResponseEntity<>(account, HttpStatus.OK);
+//    }
 
     @GetMapping("/search")
     public ResponseEntity<List<Account>> searchUser(@RequestParam String name) {
