@@ -4,5 +4,8 @@ import com.example.dailyshop.model.entity.Product;
 
 import java.util.List;
 
-public interface IProductService extends IGenerateService<Product>{
-    List<Product> findProductByproductNameContaining(String name);}
+public interface IProductService extends IGenerateService<Product> {
+    List<Product> findProductByproductNameContaining(String name);
+
+    List<Product> findProductBySupplierId(Long id);
+}
