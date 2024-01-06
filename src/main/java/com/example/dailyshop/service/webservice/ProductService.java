@@ -38,4 +38,9 @@ public class ProductService implements IProductService{
     public List<Product> findProductByproductNameContaining(String name) {
         return productRepository.findProductByproductNameContaining(name);
     }
+
+    @Override
+    public List<Product> findProductBySupplierId(Long id) {
+        return productRepository.findProductBySupplierId(id);
+    }
 }
