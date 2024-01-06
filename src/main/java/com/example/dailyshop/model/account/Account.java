@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -26,6 +28,8 @@ public class Account implements Serializable {
     @Column(nullable = false, unique = true)
     @Email(message = "Email không hợp lệ")
     private String email;
+
+    private LocalDateTime registrationTime;
     private boolean enabled = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -34,11 +38,12 @@ public class Account implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles;
 
-    public Account(String account, String password, String confirmPassword, String email, boolean enabled, Set<Role> roles) {
+    public Account(String account, String password, String confirmPassword, String email, LocalDateTime registrationTime, boolean enabled, Set<Role> roles) {
         this.account = account;
         this.password = password;
         this.confirmPassword = confirmPassword;
         this.email = email;
+        this.registrationTime = registrationTime;
         this.enabled = enabled;
         this.roles = roles;
     }
@@ -88,6 +93,14 @@ public class Account implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public LocalDateTime getRegistrationTime() {
+        return registrationTime;
+    }
+
+    public void setRegistrationTime(LocalDateTime registrationTime) {
+        this.registrationTime = registrationTime;
     }
 
     public Set<Role> getRoles() {

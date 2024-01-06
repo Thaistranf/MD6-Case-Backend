@@ -10,4 +10,6 @@ public interface SupplierService {
     Optional<Supplier> findById(Long id);
     Supplier save (Supplier supplier);
     Iterable<Supplier> searchSupplierByName(String name);
+
+    Optional<Supplier> findByAccountId(Long id);
 }
