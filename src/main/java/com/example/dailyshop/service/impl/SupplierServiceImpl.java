@@ -33,6 +33,10 @@ public class SupplierServiceImpl implements SupplierService {
         return supplierRepository.findBySupplierNameContainingIgnoreCase(name);
     }
 
+    @Override
+    public Optional<Supplier> findByAccountId(Long id) {
+        return supplierRepository.findByAccount_Id(id);
+    }
 
 
 }
