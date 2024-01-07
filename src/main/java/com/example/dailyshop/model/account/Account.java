@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Table(name = "userTable")
-public class User implements Serializable {
+@Table(name = "accountTable")
+public class Account implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -16,7 +18,7 @@ public class User implements Serializable {
     private Long id;
 
     @Column(unique = true, nullable = false)
-        private String username;
+        private String account;
 
     @Column(nullable = false)
     private String password;
@@ -26,24 +28,27 @@ public class User implements Serializable {
     @Column(nullable = false, unique = true)
     @Email(message = "Email không hợp lệ")
     private String email;
+
+    private LocalDateTime registrationTime;
     private boolean enabled = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
-            joinColumns = {@JoinColumn(name = "user_id")},
+    @JoinTable(name = "account_role",
+            joinColumns = {@JoinColumn(name = "account_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles;
 
-    public User(String username, String password, String confirmPassword, String email, boolean enabled, Set<Role> roles) {
-        this.username = username;
+    public Account(String account, String password, String confirmPassword, String email, LocalDateTime registrationTime, boolean enabled, Set<Role> roles) {
+        this.account = account;
         this.password = password;
         this.confirmPassword = confirmPassword;
         this.email = email;
+        this.registrationTime = registrationTime;
         this.enabled = enabled;
         this.roles = roles;
     }
 
-    public User() {
+    public Account() {
     }
 
     public static long getSerialVersionUID() {
@@ -58,12 +63,12 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getAccount() {
+        return account;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public String getPassword() {
@@ -88,6 +93,14 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public LocalDateTime getRegistrationTime() {
+        return registrationTime;
+    }
+
+    public void setRegistrationTime(LocalDateTime registrationTime) {
+        this.registrationTime = registrationTime;
     }
 
     public Set<Role> getRoles() {

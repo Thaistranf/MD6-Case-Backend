@@ -1,8 +1,9 @@
 package com.example.dailyshop.model.account;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "supplierTable")
@@ -13,18 +14,23 @@ public class Supplier {
 
     @Column(unique = true)
     private String supplierName;
+    private String contactName;
+    @Pattern(regexp = "((09|03|07|08|05)+([0-9]{8})\\b)", message = "Invalid phone number")
+    private String phone;
 
-    private LocalDate registrationDate;
+    private LocalDateTime editSupplierTime;
     private String imageSupplier;
 
     @ManyToOne
-    private User user;
+    private Account account;
 
-    public Supplier(String supplierName, LocalDate registrationDate, String imageSupplier, User user) {
+    public Supplier(String supplierName, String contactName, String phone, LocalDateTime editSupplierTime, String imageSupplier, Account account) {
         this.supplierName = supplierName;
-        this.registrationDate = registrationDate;
+        this.contactName = contactName;
+        this.phone = phone;
+        this.editSupplierTime = editSupplierTime;
         this.imageSupplier = imageSupplier;
-        this.user = user;
+        this.account = account;
     }
 
     public Supplier() {
@@ -48,14 +54,29 @@ public class Supplier {
         this.supplierName = supplierName;
     }
 
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
+    public String getContactName() {
+        return contactName;
     }
 
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public LocalDateTime getEditSupplierTime() {
+        return editSupplierTime;
+    }
+
+    public void setEditSupplierTime(LocalDateTime editSupplierTime) {
+        this.editSupplierTime = editSupplierTime;
+    }
 
     public String getImageSupplier() {
         return imageSupplier;
@@ -65,11 +86,11 @@ public class Supplier {
         this.imageSupplier = imageSupplier;
     }
 
-    public User getUser() {
-        return user;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }
