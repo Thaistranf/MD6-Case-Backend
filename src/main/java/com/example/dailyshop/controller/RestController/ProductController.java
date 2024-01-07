@@ -1,5 +1,4 @@
 package com.example.dailyshop.controller.RestController;
-
 import com.example.dailyshop.model.entity.Product;
 import com.example.dailyshop.service.webservice.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,18 @@ import java.util.Optional;
 public class ProductController {
     @Autowired
     private ProductService productService;
+
+    @GetMapping("/getProductBySupplier/{id}")
+    //lấy ra toàn bộ sản phẩm theo nhà cung cấp
+    public ResponseEntity<List<Product>> findProductBySupplier(@PathVariable Long id){
+        List<Product> productsList = productService.findProductBySupplierId(id);
+        if(productsList.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else {
+            return new ResponseEntity<>(productsList,HttpStatus.OK);
+        }
+    }
+
 
     @GetMapping("/getAllProduct")
     //lấy ra list danh sách sản phẩm
