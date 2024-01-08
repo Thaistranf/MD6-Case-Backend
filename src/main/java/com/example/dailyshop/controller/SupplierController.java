@@ -24,6 +24,16 @@ public class SupplierController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         supplier.setId(supplierOptional1.get().getId());
+        supplier.setStartDate(supplierOptional1.get().getStartDate());
+
+        if (supplier.getImageSupplier() == null){
+            //Neu ko thay doi thi se lay avatar cu
+            supplier.setImageSupplier(supplierOptional1.get().getImageSupplier());
+        } else {
+            //Neu thay doi se lay avatar moi
+            supplier.setImageSupplier(supplier.getImageSupplier());
+        }
+
         supplier.setEditSupplierTime(LocalDateTime.now());
         supplier.setAccount(supplierOptional.get().getAccount());
         return new ResponseEntity<>(supplierService.save(supplier), HttpStatus.OK);

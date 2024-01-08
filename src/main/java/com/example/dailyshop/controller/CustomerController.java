@@ -24,6 +24,13 @@ public class CustomerController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         customer.setId(customerOptional1.get().getId());
+
+        if (customer.getImageCustomer() == null){
+            customer.setImageCustomer(customerOptional1.get().getImageCustomer());
+        } else {
+            customer.setImageCustomer(customer.getImageCustomer());
+        }
+
         customer.setEditCustomerTime(LocalDateTime.now());
         customer.setAccount(customerOptional.get().getAccount());
         return new ResponseEntity<>(customerService.save(customer), HttpStatus.OK);

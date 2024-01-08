@@ -3,6 +3,7 @@ package com.example.dailyshop.model.account;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,16 +19,22 @@ public class Supplier {
     @Pattern(regexp = "((09|03|07|08|05)+([0-9]{8})\\b)", message = "Invalid phone number")
     private String phone;
 
+    private String address;
+
+    private LocalDate startDate;
+
     private LocalDateTime editSupplierTime;
     private String imageSupplier;
 
     @ManyToOne
     private Account account;
 
-    public Supplier(String supplierName, String contactName, String phone, LocalDateTime editSupplierTime, String imageSupplier, Account account) {
+    public Supplier(String supplierName, String contactName, String phone, String address, LocalDate startDate, LocalDateTime editSupplierTime, String imageSupplier, Account account) {
         this.supplierName = supplierName;
         this.contactName = contactName;
         this.phone = phone;
+        this.address = address;
+        this.startDate = startDate;
         this.editSupplierTime = editSupplierTime;
         this.imageSupplier = imageSupplier;
         this.account = account;
@@ -68,6 +75,22 @@ public class Supplier {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
     public LocalDateTime getEditSupplierTime() {
