@@ -8,4 +8,5 @@ public interface IProductService extends IGenerateService<Product> {
     List<Product> findProductByproductNameContaining(String name);
 
     List<Product> findProductBySupplierId(Long id);
+
 }

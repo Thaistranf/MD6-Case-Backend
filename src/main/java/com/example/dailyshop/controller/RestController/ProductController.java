@@ -1,5 +1,8 @@
 package com.example.dailyshop.controller.RestController;
+
+import com.example.dailyshop.model.entity.Photo;
 import com.example.dailyshop.model.entity.Product;
+import com.example.dailyshop.service.webservice.PhotoService;
 import com.example.dailyshop.service.webservice.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,14 +19,17 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private PhotoService photoService;
+
     @GetMapping("/getProductBySupplier/{id}")
     //lấy ra toàn bộ sản phẩm theo nhà cung cấp
-    public ResponseEntity<List<Product>> findProductBySupplier(@PathVariable Long id){
+    public ResponseEntity<List<Product>> findProductBySupplier(@PathVariable Long id) {
         List<Product> productsList = productService.findProductBySupplierId(id);
-        if(productsList.isEmpty()){
+        if (productsList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }else {
-            return new ResponseEntity<>(productsList,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(productsList, HttpStatus.OK);
         }
     }
 
@@ -42,8 +48,8 @@ public class ProductController {
     @PostMapping("/createProduct")
     //thêm mới một sản phẩm
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        productService.save(product);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        Product productNew = productService.save(product);
+        return new ResponseEntity<>(productNew, HttpStatus.OK);
     }
 
     @PutMapping("/editProduct/{id}")
