@@ -1,6 +1,8 @@
 package com.example.dailyshop.controller;
 
+import com.example.dailyshop.model.account.Account;
 import com.example.dailyshop.model.account.Customer;
+import com.example.dailyshop.service.AccountService;
 import com.example.dailyshop.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,9 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private AccountService accountService;
+
     @PutMapping("/customer/edit/{idAccount}")
     public ResponseEntity<Customer> editCustomer(@RequestBody Customer customer, @PathVariable Long idAccount){
         Optional<Customer> customerOptional = customerService.findByAccountId(idAccount);
@@ -30,6 +35,9 @@ public class CustomerController {
         } else {
             customer.setImageCustomer(customer.getImageCustomer());
         }
+
+        Optional<Account> accountOptional = accountService.findById(idAccount);
+        accountOptional.get().setCheckProfile(true);
 
         customer.setEditCustomerTime(LocalDateTime.now());
         customer.setAccount(customerOptional.get().getAccount());

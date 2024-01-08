@@ -121,7 +121,7 @@ public class AccountController {
         Account accountCustomer = accountService.save(account);
 
         Customer customer = new Customer();
-        customer.setImageCustomer("https://png.pngtree.com/element_our/20200610/ourmid/pngtree-character-default-avatar-image_2237203.jpg");
+        customer.setImageCustomer("D:\\code demo\\DailyShop\\src\\main\\java\\com\\example\\dailyshop\\image\\pngtree-character-default-avatar-image_2237203.jpg");
         customer.setAccount(accountCustomer);
         Customer customer1 = customerService.save(customer);
         return new ResponseEntity<>(customer1, HttpStatus.CREATED);
