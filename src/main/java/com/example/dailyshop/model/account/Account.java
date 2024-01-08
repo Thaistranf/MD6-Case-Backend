@@ -32,19 +32,22 @@ public class Account implements Serializable {
     private LocalDateTime registrationTime;
     private boolean enabled = true;
 
+    private boolean checkProfile = false;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "account_role",
             joinColumns = {@JoinColumn(name = "account_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles;
 
-    public Account(String account, String password, String confirmPassword, String email, LocalDateTime registrationTime, boolean enabled, Set<Role> roles) {
+    public Account(String account, String password, String confirmPassword, String email, LocalDateTime registrationTime, boolean enabled, boolean checkProfile, Set<Role> roles) {
         this.account = account;
         this.password = password;
         this.confirmPassword = confirmPassword;
         this.email = email;
         this.registrationTime = registrationTime;
         this.enabled = enabled;
+        this.checkProfile = checkProfile;
         this.roles = roles;
     }
 
@@ -117,5 +120,13 @@ public class Account implements Serializable {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public boolean isCheckProfile() {
+        return checkProfile;
+    }
+
+    public void setCheckProfile(boolean checkProfile) {
+        this.checkProfile = checkProfile;
     }
 }
