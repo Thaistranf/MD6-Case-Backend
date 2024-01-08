@@ -4,6 +4,7 @@ import com.example.dailyshop.model.account.Supplier;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -22,9 +23,9 @@ public class Product {
     private String stockQuantity;
     @ManyToOne
     private Category category;
-    @OneToMany
-    @JoinColumn(name = "productId")
-    private Set<Photo> photo;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name="product_id")
+    private List<Photo> photo;
     @ManyToOne
     private Supplier supplier;
 }
