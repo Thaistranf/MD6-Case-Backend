@@ -172,14 +172,14 @@ public class AccountController {
         return new ResponseEntity<>("Hello World", HttpStatus.OK);
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/account/{id}")
     public ResponseEntity<Account> getProfile(@PathVariable Long id) {
         Optional<Account> accountOptional = this.accountService.findById(id);
         return accountOptional.map(account -> new ResponseEntity<>(account, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping("/users/{id}")
-    public ResponseEntity<Account> updateUserProfile(@PathVariable Long id, @RequestBody Account account) {
+    @PutMapping("/account/{id}")
+    public ResponseEntity<Account> updateAccountProfile(@PathVariable Long id, @RequestBody Account account) {
         account.setId(id);
         Optional<Account> accountOptional = this.accountService.findById(id);
         Account account1 = accountOptional.get();
