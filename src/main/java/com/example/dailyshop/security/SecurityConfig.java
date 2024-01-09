@@ -76,7 +76,7 @@ public class SecurityConfig {
                                 .requestMatchers("/login", "/register", "/suppliers/register", "/customer/register").permitAll()
                                 .requestMatchers("/customer/**", "/account/**").hasAnyAuthority("ROLE_CUSTOMER")
                                 .requestMatchers("/admin/**", "/account/**").hasAnyAuthority("ROLE_ADMIN")
-                                .requestMatchers("/suppliers/**", "/account/**").hasAnyAuthority("ROLE_SUPPLIER")
+                                .requestMatchers("/suppliers/**", "/account/**","/categories/**").hasAnyAuthority("ROLE_SUPPLIER")
 //                        .requestMatchers(HttpMethod.GET).hasAnyRole("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 //                        .requestMatchers(HttpMethod.DELETE, "/categories",
 //                                "/typeOfQuestions",
