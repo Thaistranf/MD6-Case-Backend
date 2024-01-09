@@ -74,9 +74,9 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/login", "/register", "/suppliers/register", "/customer/register").permitAll()
-                                .requestMatchers("/customer/**").hasAnyAuthority("ROLE_CUSTOMER")
-                                .requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")
-                                .requestMatchers("/suppliers/**").hasAnyAuthority("ROLE_SUPPLIER")
+                                .requestMatchers("/customer/**", "/account/**").hasAnyAuthority("ROLE_CUSTOMER")
+                                .requestMatchers("/admin/**", "/account/**").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers("/suppliers/**", "/account/**").hasAnyAuthority("ROLE_SUPPLIER")
 //                        .requestMatchers(HttpMethod.GET).hasAnyRole("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 //                        .requestMatchers(HttpMethod.DELETE, "/categories",
 //                                "/typeOfQuestions",
