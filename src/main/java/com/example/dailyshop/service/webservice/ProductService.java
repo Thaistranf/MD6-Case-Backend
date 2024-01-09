@@ -43,4 +43,5 @@ public class ProductService implements IProductService{
     public List<Product> findProductBySupplierId(Long id) {
         return productRepository.findProductBySupplierId(id);
     }
+
 }

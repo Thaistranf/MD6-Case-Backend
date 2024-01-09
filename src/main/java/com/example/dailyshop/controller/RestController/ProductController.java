@@ -19,8 +19,6 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    private PhotoService photoService;
 
     @GetMapping("/getProductBySupplier/{id}")
     //lấy ra toàn bộ sản phẩm theo nhà cung cấp
@@ -78,11 +76,18 @@ public class ProductController {
         }
     }
 
+
     @GetMapping("/view/{id}")
     //Tìm kiếm thông tin một sản phẩm
     public ResponseEntity<Optional<Product>> viewProduct(@PathVariable Long id) {
         Optional<Product> product = productService.findById(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
+    @GetMapping("/findProductById/{id}")
+    public ResponseEntity<Optional<Product>> findProductById(@PathVariable Long id){
+       Optional<Product> product = productService.findById(id);
+        return new ResponseEntity<>(product,HttpStatus.OK);
     }
 
 }
