@@ -1,5 +1,6 @@
 package com.example.dailyshop.model.entity;
 
+import com.example.dailyshop.model.account.Account;
 import com.example.dailyshop.model.account.Supplier;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -27,5 +28,5 @@ public class Product {
     @JoinColumn(name="product_id")
     private List<Photo> photo;
     @ManyToOne
-    private Supplier supplier;
+    private Account account;
 }
