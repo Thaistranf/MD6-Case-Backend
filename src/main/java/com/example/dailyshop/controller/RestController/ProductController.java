@@ -20,10 +20,10 @@ public class ProductController {
     private ProductService productService;
 
 
-    @GetMapping("/getProductBySupplier/{id}")
-    //lấy ra toàn bộ sản phẩm theo nhà cung cấp
+    @GetMapping("/getProductByAccountId/{id}")
+    //lấy ra toàn bộ sản phẩm theo tài khoản có quyền nhà cung cấp
     public ResponseEntity<List<Product>> findProductBySupplier(@PathVariable Long id) {
-        List<Product> productsList = productService.findProductBySupplierId(id);
+        List<Product> productsList = productService.findProductByAccountId(id);
         if (productsList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
