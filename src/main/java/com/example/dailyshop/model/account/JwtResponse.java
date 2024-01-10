@@ -11,6 +11,7 @@ public class JwtResponse {
     private String type = "Bearer";
     private String account;
 
+    @Getter
     private boolean checkProfile;
 
     private Collection<? extends GrantedAuthority> roles;
