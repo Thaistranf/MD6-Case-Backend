@@ -40,8 +40,9 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public List<Product> findProductBySupplierId(Long id) {
-        return productRepository.findProductBySupplierId(id);
+    public List<Product> findProductByAccountId(Long id) {
+        return productRepository.findProductByAccountId(id);
     }
+
 
 }
