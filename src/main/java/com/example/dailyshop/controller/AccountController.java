@@ -164,7 +164,7 @@ public class AccountController {
         String jwt = jwtService.generateTokenLogin(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Account currentAccount = accountService.findByAccount(account.getAccount());
-        return ResponseEntity.ok(new JwtResponse(jwt, currentAccount.getId(), userDetails.getUsername(), userDetails.getAuthorities()));
+        return ResponseEntity.ok(new JwtResponse(jwt, currentAccount.getId(), userDetails.getUsername(), userDetails.getAuthorities(), currentAccount.isCheckProfile()));
     }
 
     @GetMapping("/hello")
