@@ -7,6 +7,6 @@ import java.util.List;
 public interface IProductService extends IGenerateService<Product> {
     List<Product> findProductByproductNameContaining(String name);
 
-    List<Product> findProductByAccountId(Long id);
-
+//    List<Product> findProductByAccountId(Long id);
+List<Product> findProductByAccountIdAndIsDeleted(Long id,boolean deleted);
 }
