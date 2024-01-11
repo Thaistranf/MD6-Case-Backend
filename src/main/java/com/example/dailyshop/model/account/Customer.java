@@ -20,6 +20,12 @@ public class Customer {
 
     private String address;
 
+    private String province;
+
+    private String district;
+
+    private String ward;
+
     @Pattern(regexp = "((09|03|07|08|05)+([0-9]{8})\\b)", message = "Invalid phone number")
     private String phone;
 
@@ -30,11 +36,14 @@ public class Customer {
     @ManyToOne
     private Account account;
 
-    public Customer(Long id, String customerName, LocalDate dateOfBirth, String address, String phone, String imageCustomer, LocalDateTime editCustomerTime, Account account) {
+    public Customer(Long id, String customerName, LocalDate dateOfBirth, String address, String province, String district, String ward, String phone, String imageCustomer, LocalDateTime editCustomerTime, Account account) {
         this.id = id;
         this.customerName = customerName;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
+        this.province = province;
+        this.district = district;
+        this.ward = ward;
         this.phone = phone;
         this.imageCustomer = imageCustomer;
         this.editCustomerTime = editCustomerTime;
@@ -74,6 +83,30 @@ public class Customer {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getWard() {
+        return ward;
+    }
+
+    public void setWard(String ward) {
+        this.ward = ward;
     }
 
     public String getPhone() {

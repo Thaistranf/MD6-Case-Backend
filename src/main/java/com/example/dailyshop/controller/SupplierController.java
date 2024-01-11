@@ -50,4 +50,13 @@ public class SupplierController {
         supplier.setAccount(supplierOptional.get().getAccount());
         return new ResponseEntity<>(supplierService.save(supplier), HttpStatus.OK);
     }
+
+    @GetMapping("/suppliers/findByAccountId/{id}")
+    public ResponseEntity<Supplier> findByAccountId(@PathVariable Long id) {
+        Optional<Supplier> supplierOptional = supplierService.findByAccountId(id);
+        if(supplierOptional.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(supplierOptional.get(), HttpStatus.OK);
+    }
 }

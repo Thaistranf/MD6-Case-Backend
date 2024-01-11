@@ -21,6 +21,12 @@ public class Supplier {
 
     private String address;
 
+    private String province;
+
+    private String district;
+
+    private String ward;
+
     private LocalDate startDate;
 
     private LocalDateTime editSupplierTime;
@@ -29,11 +35,15 @@ public class Supplier {
     @ManyToOne
     private Account account;
 
-    public Supplier(String supplierName, String contactName, String phone, String address, LocalDate startDate, LocalDateTime editSupplierTime, String imageSupplier, Account account) {
+    public Supplier(Long id, String supplierName, String contactName, String phone, String address, String province, String district, String ward, LocalDate startDate, LocalDateTime editSupplierTime, String imageSupplier, Account account) {
+        this.id = id;
         this.supplierName = supplierName;
         this.contactName = contactName;
         this.phone = phone;
         this.address = address;
+        this.province = province;
+        this.district = district;
+        this.ward = ward;
         this.startDate = startDate;
         this.editSupplierTime = editSupplierTime;
         this.imageSupplier = imageSupplier;
@@ -83,6 +93,30 @@ public class Supplier {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getWard() {
+        return ward;
+    }
+
+    public void setWard(String ward) {
+        this.ward = ward;
     }
 
     public LocalDate getStartDate() {
