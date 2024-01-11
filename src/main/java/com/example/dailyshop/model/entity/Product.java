@@ -22,6 +22,8 @@ public class Product {
     private String price;
     @Column(nullable = false)
     private String stockQuantity;
+    @Column(nullable = false)
+    private boolean isDeleted = false;
     @ManyToOne
     private Category category;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
