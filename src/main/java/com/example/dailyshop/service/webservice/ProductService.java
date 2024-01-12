@@ -16,7 +16,7 @@ public class ProductService implements IProductService{
 
     @Override
     public List<Product> findAll() {
-        return productRepository.findAll();
+        return productRepository.findAllByIsDeleted(false);
     }
 
     @Override
@@ -40,9 +40,7 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public List<Product> findProductByAccountId(Long id) {
-        return productRepository.findProductByAccountId(id);
+    public List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted) {
+        return productRepository.findProductByAccountIdAndIsDeleted(id,deleted);
     }
-
-
 }
