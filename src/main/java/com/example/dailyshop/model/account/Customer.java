@@ -21,7 +21,7 @@ public class Customer {
 
     private LocalDate dateOfBirth;
 
-    private String address;
+    private String specificAddress;
 
     @ManyToOne
     private Province province;
@@ -40,11 +40,11 @@ public class Customer {
     @ManyToOne
     private Account account;
 
-    public Customer(Long id, String customerName, LocalDate dateOfBirth, String address, Province province, District district, Ward ward, String phone, String imageCustomer, LocalDateTime editCustomerTime, Account account) {
+    public Customer(Long id, String customerName, LocalDate dateOfBirth, String specificAddress, Province province, District district, Ward ward, String phone, String imageCustomer, LocalDateTime editCustomerTime, Account account) {
         this.id = id;
         this.customerName = customerName;
         this.dateOfBirth = dateOfBirth;
-        this.address = address;
+        this.specificAddress = specificAddress;
         this.province = province;
         this.district = district;
         this.ward = ward;
@@ -81,12 +81,12 @@ public class Customer {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getAddress() {
-        return address;
+    public String getSpecificAddress() {
+        return specificAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setSpecificAddress(String specificAddress) {
+        this.specificAddress = specificAddress;
     }
 
     public Province getProvince() {
