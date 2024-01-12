@@ -1,5 +1,6 @@
 package com.example.dailyshop.model.account;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
@@ -9,13 +10,18 @@ public class JwtResponse {
     private String token;
     private String type = "Bearer";
     private String account;
+
+    @Getter
+    private boolean checkProfile;
+
     private Collection<? extends GrantedAuthority> roles;
 
-    public JwtResponse(String accessToken, Long id, String account, Collection<? extends GrantedAuthority> roles) {
+    public JwtResponse(String accessToken, Long id, String account, Collection<? extends GrantedAuthority> roles, boolean checkProfile) {
         this.token = accessToken;
         this.account = account;
         this.roles = roles;
         this.id = id;
+        this.checkProfile = checkProfile;
     }
 
     public Long getId() {
@@ -54,4 +60,9 @@ public class JwtResponse {
     public Collection<? extends GrantedAuthority> getRoles() {
         return roles;
     }
+
+    public void setCheckProfile(boolean checkProfile) {
+        this.checkProfile = checkProfile;
+    }
+
 }
