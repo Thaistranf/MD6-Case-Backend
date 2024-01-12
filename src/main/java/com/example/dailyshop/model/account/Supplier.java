@@ -1,5 +1,8 @@
 package com.example.dailyshop.model.account;
 
+import com.example.dailyshop.model.address.District;
+import com.example.dailyshop.model.address.Province;
+import com.example.dailyshop.model.address.Ward;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
@@ -20,12 +23,12 @@ public class Supplier {
     private String phone;
 
     private String address;
-
-    private String province;
-
-    private String district;
-
-    private String ward;
+    @ManyToOne
+    private Province province;
+    @ManyToOne
+    private District district;
+    @ManyToOne
+    private Ward ward;
 
     private LocalDate startDate;
 
@@ -35,7 +38,7 @@ public class Supplier {
     @ManyToOne
     private Account account;
 
-    public Supplier(Long id, String supplierName, String contactName, String phone, String address, String province, String district, String ward, LocalDate startDate, LocalDateTime editSupplierTime, String imageSupplier, Account account) {
+    public Supplier(Long id, String supplierName, String contactName, String phone, String address, Province province, District district, Ward ward, LocalDate startDate, LocalDateTime editSupplierTime, String imageSupplier, Account account) {
         this.id = id;
         this.supplierName = supplierName;
         this.contactName = contactName;
@@ -52,7 +55,6 @@ public class Supplier {
 
     public Supplier() {
     }
-
 
 
     public Long getId() {
@@ -95,27 +97,27 @@ public class Supplier {
         this.address = address;
     }
 
-    public String getProvince() {
+    public Province getProvince() {
         return province;
     }
 
-    public void setProvince(String province) {
+    public void setProvince(Province province) {
         this.province = province;
     }
 
-    public String getDistrict() {
+    public District getDistrict() {
         return district;
     }
 
-    public void setDistrict(String district) {
+    public void setDistrict(District district) {
         this.district = district;
     }
 
-    public String getWard() {
+    public Ward getWard() {
         return ward;
     }
 
-    public void setWard(String ward) {
+    public void setWard(Ward ward) {
         this.ward = ward;
     }
 

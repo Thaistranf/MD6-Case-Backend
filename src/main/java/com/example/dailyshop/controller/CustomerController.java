@@ -43,4 +43,13 @@ public class CustomerController {
         customer.setAccount(customerOptional.get().getAccount());
         return new ResponseEntity<>(customerService.save(customer), HttpStatus.OK);
     }
+
+    @GetMapping("/customer/findByAccountId/{id}")
+    public ResponseEntity<Customer> findByAccountId(@PathVariable Long id) {
+        Optional<Customer> customerOptional = customerService.findByAccountId(id);
+        if(customerOptional.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(customerOptional.get(), HttpStatus.OK);
+    }
 }
