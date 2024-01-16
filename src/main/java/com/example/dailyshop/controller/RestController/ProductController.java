@@ -1,10 +1,6 @@
 package com.example.dailyshop.controller.RestController;
-
-import com.example.dailyshop.model.entity.Photo;
 import com.example.dailyshop.model.entity.Product;
-import com.example.dailyshop.service.webservice.PhotoService;
 import com.example.dailyshop.service.webservice.ProductService;
-import org.antlr.v4.runtime.atn.SemanticContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,7 +63,7 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/suppliers/searchProduct")
+    @GetMapping("/account/searchProduct")
     //Tìm kiếm sản phẩm theo tên gần đúng.
     public ResponseEntity<List<Product>> searchProduct(@RequestParam String name) {
         List<Product> listProduct = productService.findProductByproductNameContaining(name);
