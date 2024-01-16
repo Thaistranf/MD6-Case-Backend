@@ -59,4 +59,14 @@ public class SupplierController {
         }
         return new ResponseEntity<>(supplierOptional.get(), HttpStatus.OK);
     }
+
+    @GetMapping("/suppliers/current")
+    public ResponseEntity<Supplier> currentSupplier() {
+        Account currentAccount= accountService.getCurrentAccount();
+        Optional<Supplier> supplierOptional = supplierService.findByAccountId(currentAccount.getId());
+        if(supplierOptional.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(supplierOptional.get(), HttpStatus.OK);
+    }
 }
