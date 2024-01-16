@@ -88,4 +88,15 @@ public class ProductController {
         return new ResponseEntity<>(product,HttpStatus.OK);
     }
 
+    @GetMapping("/getAllProduct")
+    //lấy ra list danh sách sản phẩm
+    public ResponseEntity<List<Product>> findAllWithoutLogin() {
+        List<Product> products = productService.findAll();
+        if (products.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        }
+    }
+
 }
