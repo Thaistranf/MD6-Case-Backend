@@ -10,6 +10,7 @@ import com.example.dailyshop.repository.data.OrderDetailsRepository;
 import com.example.dailyshop.repository.data.OrderRepository;
 import com.example.dailyshop.repository.data.ProductRepository;
 import com.example.dailyshop.service.AccountService;
+import org.aspectj.weaver.ast.Or;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -122,16 +123,24 @@ public class ShoppingCartService {
         return order.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
-//    public void removeOrderDetails( Long orderDetailsId){
-//        OrderDetails orderDetails = null;
-//        Account currentAccount = accountService.getCurrentAccount();
-//        Optional<Order> order = orderRepository.findOrderByAccountIdAndOrderStatus(currentAccount.getId(), Unpaid);
-//        for (OrderDetails ord: order.get().getOrderDetails()) {
-//            if(ord.getId().equals(orderDetailsId)){
-//                orderDetails = ord;
-//                orderDetailsService.removeOrderDetailsByOrder_id(order.get().getId(), orderDetails);
-//            }
-//        }
-//    }
 
+    public ResponseEntity<?> removeOrderDetail(Long orderDetailId) {
+        Account account = accountService.getCurrentAccount();
+        Optional<Order> order = orderRepository.findOrderByAccountIdAndOrderStatus(account.getId(), Unpaid);
+
+        if (order.isPresent()) {
+            if (!Objects.equals(order.get().getAccount().getId(), account.getId())) {
+                return new ResponseEntity<>("Access Denied", HttpStatus.FORBIDDEN);
+            }
+            for (OrderDetails details : order.get().getOrderDetails()) {
+                if (Objects.equals(details.getId(), orderDetailId)) {
+                    order.get().getOrderDetails().remove(details);
+                    order.get().setQuantity(getQuantityOrder(order.get()));
+                    order.get().setTotalAmount(getTotalAmount(order.get()));
+                    return new ResponseEntity<>(orderRepository.save(order.get()), HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>("Can't remove orderDetails",HttpStatus.BAD_REQUEST);
+    }
 }

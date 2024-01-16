@@ -2,6 +2,7 @@ package com.example.dailyshop.controller.RestController;
 
 import com.example.dailyshop.model.entity.Order;
 import com.example.dailyshop.model.entity.OrderDetails;
+import com.example.dailyshop.service.webservice.OrderDetailsService;
 import com.example.dailyshop.service.webservice.OrderService;
 import com.example.dailyshop.service.webservice.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -18,6 +20,8 @@ public class OrdersController {
     private ShoppingCartService cartService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private OrderDetailsService orderDetailsService;
 
     @PostMapping("/customer/addProductToOrders/{accountId}")
     //thêm sản phẩm vào giỏ hàng
@@ -60,7 +64,15 @@ public class OrdersController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
     }
 
+    @DeleteMapping("/account/removeOrderDetails/{detailsId}")
+    public ResponseEntity<?> removeOrderDetail(@PathVariable Long detailsId) {
+        return cartService.removeOrderDetail(detailsId);
+//        if (order!=null){
+//            return new ResponseEntity<>(order, HttpStatus.OK);
+//
+//        }
+//        return new ResponseEntity<>("Can't remove orderDetails",HttpStatus.BAD_REQUEST);
+    }
 }

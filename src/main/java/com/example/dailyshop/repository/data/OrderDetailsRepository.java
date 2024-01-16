@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface OrderDetailsRepository extends JpaRepository<OrderDetails,Long> {
 
-    @Query("SELECT od FROM OrderDetails od WHERE od.order_id =:id")
+    @Query("SELECT od FROM OrderDetails od WHERE od.orderId =:id")
     List<OrderDetails> findByOrderId(@Param("id") Long id);
-//    void removeOrderDetailsByOrder_id(Long accountId, OrderDetails orderDetails);
+
 }
