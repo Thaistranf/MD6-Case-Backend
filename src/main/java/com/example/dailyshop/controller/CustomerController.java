@@ -2,6 +2,7 @@ package com.example.dailyshop.controller;
 
 import com.example.dailyshop.model.account.Account;
 import com.example.dailyshop.model.account.Customer;
+import com.example.dailyshop.model.account.Supplier;
 import com.example.dailyshop.service.AccountService;
 import com.example.dailyshop.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,16 @@ public class CustomerController {
     @GetMapping("/customer/findByAccountId/{id}")
     public ResponseEntity<Customer> findByAccountId(@PathVariable Long id) {
         Optional<Customer> customerOptional = customerService.findByAccountId(id);
+        if(customerOptional.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(customerOptional.get(), HttpStatus.OK);
+    }
+
+    @GetMapping("/customer/current")
+    public ResponseEntity<Customer> currentCustomer() {
+        Account currentAccount= accountService.getCurrentAccount();
+        Optional<Customer> customerOptional = customerService.findByAccountId(currentAccount.getId());
         if(customerOptional.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
