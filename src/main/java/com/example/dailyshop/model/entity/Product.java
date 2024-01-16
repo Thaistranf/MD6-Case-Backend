@@ -1,12 +1,10 @@
 package com.example.dailyshop.model.entity;
 
 import com.example.dailyshop.model.account.Account;
-import com.example.dailyshop.model.account.Supplier;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
@@ -19,9 +17,9 @@ public class Product {
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)
-    private String price;
+    private int price;
     @Column(nullable = false)
-    private String stockQuantity;
+    private int stockQuantity;
     @Column(nullable = false)
     private boolean isDeleted = false;
     @ManyToOne
