@@ -1,7 +1,9 @@
 package com.example.dailyshop.controller.RestController;
 
+import com.example.dailyshop.model.account.Account;
 import com.example.dailyshop.model.entity.Order;
 import com.example.dailyshop.model.entity.OrderDetails;
+import com.example.dailyshop.service.AccountService;
 import com.example.dailyshop.service.webservice.OrderDetailsService;
 import com.example.dailyshop.service.webservice.OrderService;
 import com.example.dailyshop.service.webservice.ShoppingCartService;
@@ -22,12 +24,15 @@ public class OrdersController {
     private OrderService orderService;
     @Autowired
     private OrderDetailsService orderDetailsService;
+    @Autowired
+    private AccountService accountService;
 
-    @PostMapping("/customer/addProductToOrders/{accountId}")
+    @PostMapping("/customer/addProductToOrders")
     //thêm sản phẩm vào giỏ hàng
-    public ResponseEntity<?> addProductToOrders(@PathVariable Long accountId, @RequestBody OrderDetails orderDetails) {
+    public ResponseEntity<?> addProductToOrders(@RequestBody OrderDetails orderDetails) {
         try {
-            Order order = cartService.addProductToOrder(accountId, orderDetails);
+            Account currentAccount= accountService.getCurrentAccount();
+            Order order = cartService.addProductToOrder(currentAccount.getId(), orderDetails);
             if (order != null) {
                 return new ResponseEntity<>(order, HttpStatus.OK);
             } else {
@@ -40,7 +45,7 @@ public class OrdersController {
     }
 
     @GetMapping("/customer/getOrder")
-        //xem tat ca order
+        //xem tat ca order da mua
     ResponseEntity<List<Order>> findAllOrder() {
         List<Order> orders = orderService.findAll();
         if (orders.isEmpty()) {
