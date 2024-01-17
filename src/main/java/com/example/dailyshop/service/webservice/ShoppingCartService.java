@@ -70,8 +70,8 @@ public class ShoppingCartService {
         }
         BigDecimal totalAmount = getTotalAmount(orderNew);
         orderNew.setTotalAmount(totalAmount);
-        int countOrderDetails = getQuantityOrder(orderNew);
-        orderNew.setQuantity(countOrderDetails);
+//        int countOrderDetails = getQuantityOrder(orderNew);
+        orderNew.setQuantity(orderNew.getOrderDetails().size());
         return orderRepository.save(orderNew);
 
 
@@ -87,14 +87,14 @@ public class ShoppingCartService {
         return totalAmount;
     }
 
-    public Integer getQuantityOrder(Order order) {
-        int totalOrderDetails = 0;
-        for (OrderDetails count : order.getOrderDetails()) {
-//            count.setQuantity(count.getQuantity());
-            totalOrderDetails = totalOrderDetails + count.getQuantity();
-        }
-        return totalOrderDetails;
-    }
+//    public Integer getQuantityOrder(Order order) {
+//        int totalOrderDetails = 0;
+//        for (OrderDetails count : order.getOrderDetails()) {
+////            count.setQuantity(count.getQuantity());
+//            totalOrderDetails = totalOrderDetails + count.getQuantity();
+//        }
+//        return totalOrderDetails;
+//    }
 
     public ResponseEntity<Order> getCart() {
         //xem giỏ hàng của khách hàng.
@@ -135,7 +135,7 @@ public class ShoppingCartService {
             for (OrderDetails details : order.get().getOrderDetails()) {
                 if (Objects.equals(details.getId(), orderDetailId)) {
                     order.get().getOrderDetails().remove(details);
-                    order.get().setQuantity(getQuantityOrder(order.get()));
+                    order.get().setQuantity(order.get().getOrderDetails().size());
                     order.get().setTotalAmount(getTotalAmount(order.get()));
                     return new ResponseEntity<>(orderRepository.save(order.get()), HttpStatus.OK);
                 }

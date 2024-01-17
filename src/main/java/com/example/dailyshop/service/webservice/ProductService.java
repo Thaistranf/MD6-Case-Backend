@@ -3,6 +3,10 @@ package com.example.dailyshop.service.webservice;
 import com.example.dailyshop.model.entity.Product;
 import com.example.dailyshop.repository.data.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,14 +14,15 @@ import java.util.Optional;
 
 @Service
 public class ProductService implements IProductService{
-
     @Autowired
     private ProductRepository productRepository;
+    private final Sort SORT_BY_TIME_DESC = Sort.by(Sort.Direction.DESC, "createAt");
+
 
 
     @Override
     public List<Product> findAll() {
-        return productRepository.findAllByIsDeleted(false);
+        return productRepository.findAllByIsDeleted(false,SORT_BY_TIME_DESC);
     }
 
     @Override
@@ -35,13 +40,24 @@ public class ProductService implements IProductService{
         return productRepository.findById(productID);
     }
 
+
     @Override
     public List<Product> findProductByproductNameContaining(String name) {
         return productRepository.findProductByproductNameContaining(name);
     }
 
     @Override
-    public List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted) {
-        return productRepository.findProductByAccountIdAndIsDeleted(id,deleted);
+    public List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted,Sort sort) {
+        return productRepository.findProductByAccountIdAndIsDeleted(id,deleted,sort);
+    }
+
+    @Override
+    public List<Product> searchProducts(@Param("name") String name,@Param("category") String category,@Param("minPrice") int minPrice,@Param("maxPrice") int maxPrice) {
+        return productRepository.searchProducts(name,category,minPrice,maxPrice);
+    }
+
+    @Override
+    public List<Product> findTop5Products() {
+        return productRepository.findTop5Products();
     }
 }
