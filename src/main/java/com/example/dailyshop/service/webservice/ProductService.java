@@ -13,16 +13,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductService implements IProductService{
+public class ProductService implements IProductService {
     @Autowired
     private ProductRepository productRepository;
     private final Sort SORT_BY_TIME_DESC = Sort.by(Sort.Direction.DESC, "createAt");
 
 
-
     @Override
     public List<Product> findAll() {
-        return productRepository.findAllByIsDeleted(false,SORT_BY_TIME_DESC);
+        return productRepository.findAllByIsDeleted(false, SORT_BY_TIME_DESC);
     }
 
     @Override
@@ -46,14 +45,20 @@ public class ProductService implements IProductService{
         return productRepository.findProductByproductNameContaining(name);
     }
 
+
     @Override
     public List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted,Sort sort) {
-        return productRepository.findProductByAccountIdAndIsDeleted(id,deleted,sort);
+        return productRepository.findProductByAccountIdAndIsDeleted(id, deleted,SORT_BY_TIME_DESC);
     }
 
     @Override
-    public List<Product> searchProducts(@Param("name") String name,@Param("category") String category,@Param("minPrice") int minPrice,@Param("maxPrice") int maxPrice) {
-        return productRepository.searchProducts(name,category,minPrice,maxPrice);
+    public Page<Product> findAllByIsDeleted(boolean deleted, Pageable pageable) {
+        return productRepository.findAllByIsDeleted(false,pageable);
+    }
+
+    @Override
+    public List<Product> searchProducts(@Param("name") String name, @Param("category") String category, @Param("minPrice") int minPrice, @Param("maxPrice") int maxPrice) {
+        return productRepository.searchProducts(name, category, minPrice, maxPrice);
     }
 
     @Override
