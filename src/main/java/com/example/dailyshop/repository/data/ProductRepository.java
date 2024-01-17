@@ -15,11 +15,13 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+
     List<Product> findProductByproductNameContaining(String name);
 
-    List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted, Sort sort);
+    List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted,Sort sort);
 
     List<Product> findAllByIsDeleted(boolean deleted,Sort sort);
+    Page<Product> findAllByIsDeleted(boolean deleted,Pageable pageable);
     @Query(value = "SELECT p FROM Product p join Category c ON p.category.id = c.id WHERE p.productName LIKE %:name% OR c.name LIKE %:category% OR p.price  >=:minPrice and p.price <=:maxPrice")
     List<Product> searchProducts(@Param("name") String name,@Param("category") String category,@Param("minPrice") int minPrice,@Param("maxPrice") int maxPrice);
 
