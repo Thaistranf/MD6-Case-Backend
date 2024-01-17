@@ -3,6 +3,7 @@ package com.example.dailyshop.service.webservice;
 import com.example.dailyshop.model.entity.Category;
 import com.example.dailyshop.repository.data.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

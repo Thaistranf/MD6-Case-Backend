@@ -4,6 +4,7 @@ import com.example.dailyshop.model.account.Account;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -22,6 +23,7 @@ public class Product {
     private int stockQuantity;
     @Column(nullable = false)
     private boolean isDeleted = false;
+    private LocalDateTime createAt;
     @ManyToOne
     private Category category;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
