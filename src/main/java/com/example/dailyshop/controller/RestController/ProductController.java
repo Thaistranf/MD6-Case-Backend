@@ -1,4 +1,5 @@
 package com.example.dailyshop.controller.RestController;
+
 import com.example.dailyshop.model.entity.Product;
 import com.example.dailyshop.service.webservice.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class ProductController {
     @GetMapping("/suppliers/getProductByAccountId/{id}")
     //lấy ra toàn bộ sản phẩm theo tài khoản có quyền nhà cung cấp
     public ResponseEntity<List<Product>> findProductBySupplier(@PathVariable Long id) {
-        List<Product> productsList = productService.findProductByAccountIdAndIsDeleted(id,false);
+        List<Product> productsList = productService.findProductByAccountIdAndIsDeleted(id, false);
         if (productsList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
@@ -83,9 +84,9 @@ public class ProductController {
     }
 
     @GetMapping("/suppliers/findProductById/{id}")
-    public ResponseEntity<Optional<Product>> findProductById(@PathVariable Long id){
-       Optional<Product> product = productService.findById(id);
-        return new ResponseEntity<>(product,HttpStatus.OK);
+    public ResponseEntity<Optional<Product>> findProductById(@PathVariable Long id) {
+        Optional<Product> product = productService.findById(id);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @GetMapping("/getAllProduct")
@@ -96,6 +97,16 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(products, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<Product>> findAllByCategoryId(@PathVariable Long id) {
+        List<Product> productListByCategoryId = productService.findAllByCategoryId(id);
+        if (productListByCategoryId.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(productListByCategoryId, HttpStatus.OK);
         }
     }
 

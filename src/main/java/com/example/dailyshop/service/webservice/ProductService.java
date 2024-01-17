@@ -44,4 +44,9 @@ public class ProductService implements IProductService{
     public List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted) {
         return productRepository.findProductByAccountIdAndIsDeleted(id,deleted);
     }
+
+    @Override
+    public List<Product> findAllByCategoryId(Long id) {
+        return productRepository.findAllByCategoryId(id);
+    }
 }
