@@ -1,10 +1,7 @@
 package com.example.dailyshop.service.webservice;
 
 import com.example.dailyshop.model.account.Account;
-import com.example.dailyshop.model.entity.Order;
-import com.example.dailyshop.model.entity.OrderDetails;
-import com.example.dailyshop.model.entity.OrderStatus;
-import com.example.dailyshop.model.entity.Product;
+import com.example.dailyshop.model.entity.*;
 import com.example.dailyshop.repository.AccountRepository;
 import com.example.dailyshop.repository.data.OrderDetailsRepository;
 import com.example.dailyshop.repository.data.OrderRepository;
@@ -70,8 +67,8 @@ public class ShoppingCartService {
         }
         BigDecimal totalAmount = getTotalAmount(orderNew);
         orderNew.setTotalAmount(totalAmount);
-//        int countOrderDetails = getQuantityOrder(orderNew);
-        orderNew.setQuantity(orderNew.getOrderDetails().size());
+        int countOrderDetails = getQuantityOrder(orderNew);
+        orderNew.setQuantity(countOrderDetails);
         return orderRepository.save(orderNew);
 
 
@@ -87,14 +84,14 @@ public class ShoppingCartService {
         return totalAmount;
     }
 
-//    public Integer getQuantityOrder(Order order) {
-//        int totalOrderDetails = 0;
-//        for (OrderDetails count : order.getOrderDetails()) {
-////            count.setQuantity(count.getQuantity());
-//            totalOrderDetails = totalOrderDetails + count.getQuantity();
-//        }
-//        return totalOrderDetails;
-//    }
+    public Integer getQuantityOrder(Order order) {
+        int totalOrderDetails = 0;
+        for (OrderDetails count : order.getOrderDetails()) {
+//            count.setQuantity(count.getQuantity());
+            totalOrderDetails = totalOrderDetails + count.getQuantity();
+        }
+        return totalOrderDetails;
+    }
 
     public ResponseEntity<Order> getCart() {
         //xem giỏ hàng của khách hàng.
@@ -141,6 +138,16 @@ public class ShoppingCartService {
                 }
             }
         }
-        return new ResponseEntity<>("Can't remove orderDetails",HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Can't remove orderDetails", HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<?> findOrderCustomerPaid() {
+        Account account = accountService.getCurrentAccount();
+        List<Order> orders = orderRepository.findOrderByAccountAndOrderStatus(account, Paid);
+        if (orders.isEmpty()) {
+            return new ResponseEntity<>("Null Data", HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        }
     }
 }

@@ -74,10 +74,11 @@ public class OrdersController {
     @DeleteMapping("/account/removeOrderDetails/{detailsId}")
     public ResponseEntity<?> removeOrderDetail(@PathVariable Long detailsId) {
         return cartService.removeOrderDetail(detailsId);
-//        if (order!=null){
-//            return new ResponseEntity<>(order, HttpStatus.OK);
-//
-//        }
-//        return new ResponseEntity<>("Can't remove orderDetails",HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/account/getOrderCustomerPaid")
+    public ResponseEntity<?> getOrderCustomer(){
+        ResponseEntity<?> orders = cartService.findOrderCustomerPaid();
+        return new ResponseEntity<>(orders,HttpStatus.OK);
     }
 }
