@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class OrderDetails {
+public class CartDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,6 +16,6 @@ public class OrderDetails {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-    @Column(name = "order_id")
-    private Long orderId;
+    @Column(name = "cart_id")
+    private Long cartId;
 }

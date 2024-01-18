@@ -118,15 +118,15 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/getProductTop")
-    public ResponseEntity<List<Product>> getProductTop() {
-        List<Product> products = productService.findTop5Products();
-        if (products.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(products, HttpStatus.OK);
-        }
-    }
+//    @GetMapping("/getProductTop")
+//    public ResponseEntity<List<Product>> getProductTop() {
+//        List<Product> products = productService.findTop5Products();
+//        if (products.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        } else {
+//            return new ResponseEntity<>(products, HttpStatus.OK);
+//        }
+//    }
 
     @GetMapping("/getAllProductIsDeleted")
     //phân trang sản phẩm và ưu tiên hiển thị sản phẩm mới nhất theo thời gian.
