@@ -1,11 +1,11 @@
 package com.example.dailyshop.controller.RestController;
 
 import com.example.dailyshop.model.account.Account;
-import com.example.dailyshop.model.entity.Order;
-import com.example.dailyshop.model.entity.OrderDetails;
+import com.example.dailyshop.model.entity.Cart;
+import com.example.dailyshop.model.entity.CartDetails;
 import com.example.dailyshop.service.AccountService;
-import com.example.dailyshop.service.webservice.OrderDetailsService;
-import com.example.dailyshop.service.webservice.OrderService;
+import com.example.dailyshop.service.webservice.CartDetailsService;
+import com.example.dailyshop.service.webservice.CartService;
 import com.example.dailyshop.service.webservice.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,28 +13,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
-public class OrdersController {
+public class CartController {
     @Autowired
     private ShoppingCartService cartService;
     @Autowired
-    private OrderService orderService;
-    @Autowired
-    private OrderDetailsService orderDetailsService;
+    private CartService orderService;
     @Autowired
     private AccountService accountService;
 
     @PostMapping("/customer/addProductToOrders")
     //thêm sản phẩm vào giỏ hàng
-    public ResponseEntity<?> addProductToOrders(@RequestBody OrderDetails orderDetails) {
+    public ResponseEntity<?> addProductToOrders(@RequestBody CartDetails cartDetails) {
         try {
             Account currentAccount= accountService.getCurrentAccount();
-            Order order = cartService.addProductToOrder(currentAccount.getId(), orderDetails);
-            if (order != null) {
-                return new ResponseEntity<>(order, HttpStatus.OK);
+            Cart cart = cartService.addProductToOrder(currentAccount.getId(), cartDetails);
+            if (cart != null) {
+                return new ResponseEntity<>(cart, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -46,18 +43,18 @@ public class OrdersController {
 
     @GetMapping("/customer/getOrder")
         //xem tat ca order da mua
-    ResponseEntity<List<Order>> findAllOrder() {
-        List<Order> orders = orderService.findAll();
-        if (orders.isEmpty()) {
+    ResponseEntity<List<Cart>> findAllOrder() {
+        List<Cart> carts = orderService.findAll();
+        if (carts.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(orders, HttpStatus.OK);
+            return new ResponseEntity<>(carts, HttpStatus.OK);
         }
     }
 
     @GetMapping("/customer/cart")
     //Xem gio hang cua khach hang
-    public ResponseEntity<Order> getCart() {
+    public ResponseEntity<Cart> getCart() {
         return cartService.getCart();
     }
 
@@ -74,10 +71,11 @@ public class OrdersController {
     @DeleteMapping("/account/removeOrderDetails/{detailsId}")
     public ResponseEntity<?> removeOrderDetail(@PathVariable Long detailsId) {
         return cartService.removeOrderDetail(detailsId);
-//        if (order!=null){
-//            return new ResponseEntity<>(order, HttpStatus.OK);
-//
-//        }
-//        return new ResponseEntity<>("Can't remove orderDetails",HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/account/getOrderCustomerPaid")
+    public ResponseEntity<?> getOrderCustomer(){
+        ResponseEntity<?> orders = cartService.findOrderCustomerPaid();
+        return new ResponseEntity<>(orders,HttpStatus.OK);
     }
 }

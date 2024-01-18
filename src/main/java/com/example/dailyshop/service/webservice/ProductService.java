@@ -61,8 +61,8 @@ public class ProductService implements IProductService {
         return productRepository.searchProducts(name, category, minPrice, maxPrice);
     }
 
-    @Override
-    public List<Product> findTop5Products() {
-        return productRepository.findTop5Products();
-    }
+//    @Override
+//    public List<Product> findTop5Products() {
+//        return productRepository.findTop5Products();
+//    }
 }

@@ -1,7 +1,6 @@
 package com.example.dailyshop.model.entity;
 
 import com.example.dailyshop.model.account.Account;
-import com.example.dailyshop.model.account.Customer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +15,8 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "orders")
-public class Order {
+@Table(name = "cart")
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,11 +25,11 @@ public class Order {
     private BigDecimal totalAmount;
     @Column(nullable = false)
     private LocalDateTime orderDate;
-    @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+//    @Enumerated(EnumType.STRING)
+//    private OrderStatus orderStatus;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name="order_id")
-    private Set<OrderDetails> orderDetails;
+    @JoinColumn(name="cart_id")
+    private Set<CartDetails> cartDetails;
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
