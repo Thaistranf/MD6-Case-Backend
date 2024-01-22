@@ -34,6 +34,11 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
+    public Iterable<Supplier> findByCartId(Long cartId) {
+        return supplierRepository.findByCartId(cartId);
+    }
+
+    @Override
     public Optional<Supplier> findByAccountId(Long id) {
         return supplierRepository.findByAccount_Id(id);
     }

@@ -15,16 +15,16 @@ import java.util.List;
 @CrossOrigin("*")
 public class CartDetailsController {
     @Autowired
-    private CartDetailsService orderDetailsService;
+    private CartDetailsService cartDetailsService;
     @Autowired
     private AccountService accountService;
     @Autowired
-    private CartService orderService;
+    private CartService cartService;
 
     @GetMapping("/account/getOrderDetails")
     public ResponseEntity<List<CartDetails>> getAllOrderDetails() {
         try {
-            List<CartDetails> cartDetails = orderDetailsService.findAll();
+            List<CartDetails> cartDetails = cartDetailsService.findAll();
             if (cartDetails.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
@@ -38,7 +38,7 @@ public class CartDetailsController {
 
     @GetMapping("/account/findOrderDetailsByOrderId/{cartId}")
     ResponseEntity<List<CartDetails>> findOrderDetails(@PathVariable Long cartId) {
-        List<CartDetails> cartDetails = orderDetailsService.findOrderDetailsByCartId(cartId);
+        List<CartDetails> cartDetails = cartDetailsService.findCartDetailsByCartId(cartId);
         if (cartDetails != null) {
             return new ResponseEntity<>(cartDetails, HttpStatus.OK);
         } else {

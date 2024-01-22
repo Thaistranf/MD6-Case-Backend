@@ -28,7 +28,7 @@ public class CartController {
     //thêm sản phẩm vào giỏ hàng
     public ResponseEntity<?> addProductToOrders(@RequestBody CartDetails cartDetails) {
         try {
-            Account currentAccount= accountService.getCurrentAccount();
+            Account currentAccount = accountService.getCurrentAccount();
             Cart cart = cartService.addProductToOrder(currentAccount.getId(), cartDetails);
             if (cart != null) {
                 return new ResponseEntity<>(cart, HttpStatus.OK);
@@ -74,8 +74,8 @@ public class CartController {
     }
 
     @GetMapping("/account/getOrderCustomerPaid")
-    public ResponseEntity<?> getOrderCustomer(){
+    public ResponseEntity<?> getOrderCustomer() {
         ResponseEntity<?> orders = cartService.findOrderCustomerPaid();
-        return new ResponseEntity<>(orders,HttpStatus.OK);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 }

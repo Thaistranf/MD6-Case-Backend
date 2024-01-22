@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PhotoService implements IPhotoService{
+public class PhotoService implements IPhotoService {
     @Autowired
     private PhotoRepository photoRepository;
 

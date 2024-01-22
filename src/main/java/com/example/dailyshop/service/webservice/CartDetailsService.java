@@ -32,8 +32,13 @@ public class CartDetailsService implements ICartDetailsService {
     }
 
     @Override
-    public List<CartDetails> findOrderDetailsByCartId(Long cartId) {
+    public List<CartDetails> findCartDetailsByCartId(Long cartId) {
         return cartDetailsRepository.findByOrderId(cartId);
+    }
+
+    @Override
+    public Optional<CartDetails> findCartDetailsByCartIdAndId(Long cartId, Long productId) {
+        return cartDetailsRepository.findCartDetailsByCartIdAndId(cartId,productId);
     }
 
     @Override
