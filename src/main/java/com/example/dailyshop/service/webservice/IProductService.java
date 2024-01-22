@@ -12,6 +12,8 @@ import java.util.List;
 public interface IProductService extends IGenerateService<Product> {
     List<Product> findProductByproductNameContaining(String name);
 
+    List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted);
+    List<Product> findAllByCategoryId(Long id);
     List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted,Sort sort);
 
     Page<Product> findAllByIsDeleted(boolean deleted,Pageable pageable);

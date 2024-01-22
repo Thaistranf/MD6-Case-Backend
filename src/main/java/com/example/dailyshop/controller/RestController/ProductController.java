@@ -118,6 +118,16 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<Product>> findAllByCategoryId(@PathVariable Long id) {
+        List<Product> productListByCategoryId = productService.findAllByCategoryId(id);
+        if (productListByCategoryId.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(productListByCategoryId, HttpStatus.OK);
+        }
+    }
+
 //    @GetMapping("/getProductTop")
 //    public ResponseEntity<List<Product>> getProductTop() {
 //        List<Product> products = productService.findTop5Products();
