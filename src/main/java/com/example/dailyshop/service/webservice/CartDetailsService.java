@@ -1,5 +1,6 @@
 package com.example.dailyshop.service.webservice;
 
+import com.example.dailyshop.model.account.Account;
 import com.example.dailyshop.model.entity.CartDetails;
 import com.example.dailyshop.repository.data.CartDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,11 @@ public class CartDetailsService implements ICartDetailsService {
     @Override
     public void deleteById(Long id) {
         cartDetailsRepository.deleteById(id);
+    }
+
+    @Override
+    public Integer countCartDetailsByCartId(Long cartId) {
+        return cartDetailsRepository.countCartDetailsByCartId(cartId);
     }
 
 

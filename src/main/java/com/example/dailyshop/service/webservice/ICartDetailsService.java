@@ -10,4 +10,7 @@ public interface ICartDetailsService extends IGenerateService<CartDetails>{
     Optional<CartDetails> findCartDetailsByCartIdAndId(Long cartId, Long productId);
 
     void deleteById(Long id);
+
+    Integer countCartDetailsByCartId(Long cartId);
+
 }

@@ -7,6 +7,7 @@ import com.example.dailyshop.repository.data.OrderRepository;
 import com.example.dailyshop.service.AccountService;
 import com.example.dailyshop.service.SupplierService;
 import com.example.dailyshop.service.webservice.CartService;
+import com.example.dailyshop.service.webservice.ProductService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,18 +29,22 @@ public class BillService {
     private OrderService orderService;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private OrderDetailsService orderDetailsService;
 
 
     public List<Order> paymentBillCustomer() {
-        List<Order> orders= new ArrayList<>();
+        List<Order> orders = new ArrayList<>();
         Account account = accountService.getCurrentAccount();
         Optional<Cart> cart = cartService.findCartByAccountId(account.getId());
-        if (cart.isEmpty() || cart.get().getCartDetails().isEmpty()){
+        if (cart.isEmpty() || cart.get().getCartDetails().isEmpty()) {
             return orders;
         }
         Iterable<Supplier> suppliers = supplierService.findByCartId(cart.get().getId());
-        Set<CartDetails> cartDetails =cart.get().getCartDetails();
-        for (Supplier supplier: suppliers){
+        Set<CartDetails> cartDetails = cart.get().getCartDetails();
+        for (Supplier supplier : suppliers) {
             Order order = getOrder(supplier, account, cartDetails);
             orders.add(order);
             orderRepository.save(order);
@@ -65,8 +70,8 @@ public class BillService {
     @NotNull
     private static Set<OrderDetails> getOrderDetails(Supplier supplier, Set<CartDetails> cartDetails) {
         Set<OrderDetails> orderDetails = new HashSet<>();
-        for (CartDetails item: cartDetails){
-            if (Objects.equals(item.getProduct().getAccount().getId(), supplier.getAccount().getId() )){
+        for (CartDetails item : cartDetails) {
+            if (Objects.equals(item.getProduct().getAccount().getId(), supplier.getAccount().getId())) {
                 OrderDetails newItem = new OrderDetails();
                 newItem.setQuantity(item.getQuantity());
                 newItem.setProduct(item.getProduct());
@@ -76,6 +81,7 @@ public class BillService {
         }
         return orderDetails;
     }
+
     @NotNull
     private static BigDecimal getTotalAmount(Set<OrderDetails> orderDetails) {
         BigDecimal totalAmount = BigDecimal.valueOf(0);
@@ -86,7 +92,7 @@ public class BillService {
         return totalAmount;
     }
 
-    public List<Order> createBillCustomer(){
+    public List<Order> createBillCustomer() {
         //Thanh toán đơn hàng cho khách hàng.
         return paymentBillCustomer();
     }
@@ -95,22 +101,33 @@ public class BillService {
         //xem đơn hàng của khách hàng.
         Account currentAccount = accountService.getCurrentAccount();
         List<Order> order = orderService.findOrderByAccountId(currentAccount.getId());
-        if(order.isEmpty()){
+        if (order.isEmpty()) {
             return null;
-        }else {
+        } else {
             return order;
         }
     }
 
-    public List<Order> getOrderBySupplier(){
+    public List<Order> getOrderBySupplier() {
         Account account = accountService.getCurrentAccount();
         Optional<Supplier> supplier = supplierService.findByAccountId(account.getId());
         return orderRepository.findOrderBySupplierId(supplier.get().getId());
     }
 
-    public Order updateOrderStatus(Long orderId, OrderStatus orderStatus){
+    public Order updateOrderStatus(Long orderId, OrderStatus orderStatus) {
         Order order = orderService.findById(orderId).get();
         order.setOrderStatus(orderStatus);
+        List<OrderDetails> orderDetails = orderDetailsService.findOrderDetailsByOrderId(order.getOrderId());
+        List<Product> products = productService.findAll();
+        for (int i = 0; i < products.size(); i++) {
+            for (OrderDetails ordOld : orderDetails) {
+                if (Objects.equals(products.get(i).getProductID(), ordOld.getProduct().getProductID())) {
+                    products.get(i).setStockQuantity(products.get(i).getStockQuantity() - order.getQuantity());
+                    productService.save(products.get(i));
+                    break;
+                }
+            }
+        }
         orderService.save(order);
         return order;
     }
