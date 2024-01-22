@@ -143,4 +143,10 @@ public class ShoppingCartService {
             return new ResponseEntity<>(carts, HttpStatus.OK);
         }
     }
+
+    public Integer countDetails(){
+        Account account = accountService.getCurrentAccount();
+        Optional<Cart> cart = cartRepository.findCartByAccountId(account.getId());
+        return cartDetailsService.countCartDetailsByCartId(cart.get().getId());
+    }
 }
