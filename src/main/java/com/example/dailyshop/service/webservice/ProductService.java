@@ -65,4 +65,9 @@ public class ProductService implements IProductService {
 //    public List<Product> findTop5Products() {
 //        return productRepository.findTop5Products();
 //    }
+
+    @Override
+    public List<Product> findAllByCategoryId(Long id) {
+        return productRepository.findAllByCategoryId(id);
+    }
 }
