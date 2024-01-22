@@ -78,4 +78,14 @@ public class CartController {
         ResponseEntity<?> orders = cartService.findOrderCustomerPaid();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
+
+    @GetMapping("/customer/countCartDetails")
+    public ResponseEntity<Integer> countCartDetails(){
+        int count = cartService.countDetails();
+        if(count == 0 ){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else {
+            return new ResponseEntity<>(count,HttpStatus.OK);
+        }
+    }
 }
