@@ -14,4 +14,7 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     Iterable<Supplier> findBySupplierNameContainingIgnoreCase(String keyword);
     @Query(value = "select * from supplier_table where account_id = :id", nativeQuery = true)
     Optional<Supplier> findByAccount_Id(@Param("id") Long id);
+
+    @Query("SELECT s FROM Supplier s JOIN CartDetails c ON s.account.id = c.product.account.id AND c.cartId=:id")
+    Iterable<Supplier> findByCartId(Long id);
 }

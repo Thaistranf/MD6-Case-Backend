@@ -47,13 +47,13 @@ public class ProductService implements IProductService {
 
 
     @Override
-    public List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted,Sort sort) {
-        return productRepository.findProductByAccountIdAndIsDeleted(id, deleted,SORT_BY_TIME_DESC);
+    public List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted, Sort sort) {
+        return productRepository.findProductByAccountIdAndIsDeleted(id, deleted, SORT_BY_TIME_DESC);
     }
 
     @Override
     public Page<Product> findAllByIsDeleted(boolean deleted, Pageable pageable) {
-        return productRepository.findAllByIsDeleted(false,pageable);
+        return productRepository.findAllByIsDeleted(false, pageable);
     }
 
     @Override
@@ -61,8 +61,8 @@ public class ProductService implements IProductService {
         return productRepository.searchProducts(name, category, minPrice, maxPrice);
     }
 
-//    @Override
-//    public List<Product> findTop5Products() {
-//        return productRepository.findTop5Products();
-//    }
+    @Override
+    public List<Product> findTop5Products() {
+        return productRepository.findTop5Products();
+    }
 }

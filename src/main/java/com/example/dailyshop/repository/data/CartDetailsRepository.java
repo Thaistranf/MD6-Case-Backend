@@ -7,12 +7,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CartDetailsRepository extends JpaRepository<CartDetails,Long> {
 
     @Query("SELECT od FROM CartDetails od WHERE od.cartId =:id")
     List<CartDetails> findByOrderId(@Param("id") Long id);
+
+    Optional<CartDetails> findCartDetailsByCartIdAndId(Long cartId,Long productId);
 
 
 }

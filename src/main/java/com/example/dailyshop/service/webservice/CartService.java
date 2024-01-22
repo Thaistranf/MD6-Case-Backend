@@ -36,14 +36,16 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public Optional<Cart> findOrderByAccountId(Long account_id) {
-        return cartRepository.findOrderByAccountId(account_id);
+    public Optional<Cart> findCartByAccountId(Long account_id) {
+        return cartRepository.findCartByAccountId(account_id);
     }
 
     @Override
     public List<Cart> findOrderByAccount(Account account_id) {
         return cartRepository.findOrderByAccount(account_id);
     }
+
+
 
 
 }
