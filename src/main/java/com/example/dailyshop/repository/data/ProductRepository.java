@@ -25,6 +25,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> searchProducts(@Param("name") String name,@Param("category") String category,@Param("minPrice") int minPrice,@Param("maxPrice") int maxPrice);
     List<Product> findAllByCategoryId(Long id);
 
-//    @Query(value = "select ord.product, p.productName,sum(ord.quantity) as totalQuantity from CartDetails ord join Product p on p.productID = ord.product.productID join Cart o on o.id = ord.cartId where o.orderStatus = 'Paid' group by p.productName,ord.product order by totalQuantity desc limit 5")
-//    List<Product> findTop5Products();
+    @Query(value = "select ord.product, p.productName,sum(ord.quantity) as totalQuantity from OrderDetails ord join Product p on p.productID = ord.product.productID join Order o on o.orderId = ord.orderId where o.orderStatus = 'Paid' group by p.productName,ord.product order by totalQuantity desc limit 5")
+    List<Product> findTop5Products();
 }

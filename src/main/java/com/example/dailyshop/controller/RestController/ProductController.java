@@ -82,7 +82,7 @@ public class ProductController {
     }
 
     @GetMapping("/searchProduct")
-    //Tìm kiếm sản phẩm theo tên gần đúng.
+    //Tìm kiếm sản phẩm theo tên gần đúng, theo nhà cung cấp, tìm trong khoảng giá thấp nhất và cao nhất.
     public ResponseEntity<List<Product>> searchProduct(@RequestParam String name, @RequestParam String category, @RequestParam int minPrice, @RequestParam int maxPrice) {
         List<Product> listProduct = productService.searchProducts(name, category, minPrice, maxPrice);
         if (listProduct.isEmpty()) {
@@ -118,6 +118,15 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/getProductTop")
+    public ResponseEntity<List<Product>> getProductTop() {
+        List<Product> products = productService.findTop5Products();
+        if (products.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        }
+    }
     @GetMapping("/category/{id}")
     public ResponseEntity<List<Product>> findAllByCategoryId(@PathVariable Long id) {
         List<Product> productListByCategoryId = productService.findAllByCategoryId(id);
@@ -128,15 +137,6 @@ public class ProductController {
         }
     }
 
-//    @GetMapping("/getProductTop")
-//    public ResponseEntity<List<Product>> getProductTop() {
-//        List<Product> products = productService.findTop5Products();
-//        if (products.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        } else {
-//            return new ResponseEntity<>(products, HttpStatus.OK);
-//        }
-//    }
 
     @GetMapping("/getAllProductIsDeleted")
     //phân trang sản phẩm và ưu tiên hiển thị sản phẩm mới nhất theo thời gian.

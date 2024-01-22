@@ -19,10 +19,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.example.dailyshop.model.entity.OrderStatus.Paid;
-import static com.example.dailyshop.model.entity.OrderStatus.Unpaid;
-
-
 @Service
 public class ShoppingCartService {
     @Autowired
@@ -34,11 +30,11 @@ public class ShoppingCartService {
     @Autowired
     private AccountService accountService;
     @Autowired
-    private CartDetailsService orderDetailsService;
+    private CartDetailsService cartDetailsService;
 
     public Cart addProductToOrder(Long account_id, CartDetails orderDetail) {
         //thêm sản phẩm vào giỏ hàng.
-        Optional<Cart> order = cartRepository.findOrderByAccountId(account_id);
+        Optional<Cart> order = cartRepository.findCartByAccountId(account_id);
         Optional<Product> product = productRepository.findById(orderDetail.getProduct().getProductID());
         Cart cartNew;
         if (order.isPresent()) {
@@ -94,15 +90,15 @@ public class ShoppingCartService {
     public ResponseEntity<Cart> getCart() {
         //xem giỏ hàng của khách hàng.
         Account currentAccount = accountService.getCurrentAccount();
-        Optional<Cart> order = cartRepository.findOrderByAccountId(currentAccount.getId());
+        Optional<Cart> order = cartRepository.findCartByAccountId(currentAccount.getId());
         return order.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     public ResponseEntity<?> paymentOrder() {
         //thanh toan gio hang
         Account currentAccount = accountService.getCurrentAccount();
-        Optional<Cart> order = cartRepository.findOrderByAccountId(currentAccount.getId());
-        Iterable<CartDetails> orderDetails = orderDetailsService.findOrderDetailsByCartId(order.get().getId());
+        Optional<Cart> order = cartRepository.findCartByAccountId(currentAccount.getId());
+        Iterable<CartDetails> orderDetails = cartDetailsService.findCartDetailsByCartId(order.get().getId());
         List<Product> products = productRepository.findAll();
         for (int i = 0; i < products.size(); i++) {
             for (CartDetails cartDetailsOld : orderDetails) {
@@ -120,7 +116,7 @@ public class ShoppingCartService {
 
     public ResponseEntity<?> removeOrderDetail(Long orderDetailId) {
         Account account = accountService.getCurrentAccount();
-        Optional<Cart> order = cartRepository.findOrderByAccountId(account.getId());
+        Optional<Cart> order = cartRepository.findCartByAccountId(account.getId());
 
         if (order.isPresent()) {
             if (!Objects.equals(order.get().getAccount().getId(), account.getId())) {
