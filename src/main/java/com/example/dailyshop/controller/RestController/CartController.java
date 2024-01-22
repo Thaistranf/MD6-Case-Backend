@@ -58,15 +58,15 @@ public class CartController {
         return cartService.getCart();
     }
 
-    @GetMapping("/customer/payment")
-    //thanh toan gio hang
-    public ResponseEntity<?> paymentOrder() {
-        try {
-            return new ResponseEntity<>(cartService.paymentOrder(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @GetMapping("/customer/payment")
+//    //thanh toan gio hang
+//    public ResponseEntity<?> paymentOrder() {
+//        try {
+//            return new ResponseEntity<>(cartService.paymentOrder(), HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     @DeleteMapping("/account/removeOrderDetails/{detailsId}")
     public ResponseEntity<?> removeOrderDetail(@PathVariable Long detailsId) {

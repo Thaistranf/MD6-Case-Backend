@@ -18,6 +18,7 @@ public class OrderController {
     private BillService billService;
 
     @GetMapping("/getOrderCustomer")
+    //xac nhan thanh toan don hang
     public ResponseEntity<?> getOrder(){
         List<Order> ord = billService.createBillCustomer();
         return new ResponseEntity<>(ord, HttpStatus.OK);
@@ -34,6 +35,7 @@ public class OrderController {
     }
 
     @GetMapping("/suppliers/orderSupplier")
+    //Lay ra ds don hang khach da xac nhan mua
     public ResponseEntity<?> getOrderSupplier(){
         List<Order> orders = billService.getOrderBySupplier();
         if(orders.isEmpty()){
@@ -44,6 +46,7 @@ public class OrderController {
     }
 
     @PutMapping("/suppliers/updateOrder/{id}")
+    //chu shop xac nhan trang thai don hang cua khach xac nhan mua
     public ResponseEntity<?> orderUpdate(@PathVariable Long id,@RequestBody OrderStatus orderStatus){
         Order order = billService.updateOrderStatus(id,orderStatus);
         return new ResponseEntity<>(order,HttpStatus.OK);
