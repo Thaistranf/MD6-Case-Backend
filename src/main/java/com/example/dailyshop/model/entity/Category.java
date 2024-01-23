@@ -13,5 +13,7 @@ public class Category {
     private String name;
     @Column(nullable = false)
     private boolean isDeleted;
+    @Column(nullable = false)
+    private String photoCategory;
 
 }
