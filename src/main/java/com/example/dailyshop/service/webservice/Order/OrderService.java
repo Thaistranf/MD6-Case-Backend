@@ -5,6 +5,7 @@ import com.example.dailyshop.model.entity.Order;
 import com.example.dailyshop.model.entity.OrderStatus;
 import com.example.dailyshop.repository.data.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,13 +36,13 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<Order> findOrderByAccountId(Long accountId) {
-        return orderRepository.findOrderByAccountId(accountId);
+    public List<Order> findOrderByAccountId(Long accountId, Sort sort) {
+        return orderRepository.findOrderByAccountId(accountId,sort);
     }
 
     @Override
-    public List<Order> findOrderBySupplierId(Long supplierId) {
-        return orderRepository.findOrderBySupplierId(supplierId);
+    public List<Order> findOrderBySupplierId(Long supplierId,Sort sort) {
+        return orderRepository.findOrderBySupplierId(supplierId,sort);
     }
 
 

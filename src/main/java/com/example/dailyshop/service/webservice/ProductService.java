@@ -57,9 +57,20 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> searchProducts(@Param("name") String name, @Param("category") String category, @Param("minPrice") int minPrice, @Param("maxPrice") int maxPrice) {
-        return productRepository.searchProducts(name, category, minPrice, maxPrice);
+    public List<Product> findProductsByConditions(String productName, int minPrice, int maxPrice) {
+        return productRepository.findProductsByConditions(productName,minPrice,maxPrice);
     }
+
+    @Override
+    public List<Product> findByProductNameContaining(String name) {
+        return productRepository.findByProductNameContaining(name);
+    }
+
+    @Override
+    public List<Product> findProductsByProductNameContaining(String name) {
+        return productRepository.findProductsByProductNameContaining(name);
+    }
+
 
     @Override
     public List<Product> findTop5Products() {
