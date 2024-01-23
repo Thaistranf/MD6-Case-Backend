@@ -83,8 +83,8 @@ public class ProductController {
 
     @GetMapping("/searchProduct")
     //Tìm kiếm sản phẩm theo tên gần đúng, theo nhà cung cấp, tìm trong khoảng giá thấp nhất và cao nhất.
-    public ResponseEntity<List<Product>> searchProduct(@RequestParam String name, @RequestParam String category, @RequestParam int minPrice, @RequestParam int maxPrice) {
-        List<Product> listProduct = productService.searchProducts(name, category, minPrice, maxPrice);
+    public ResponseEntity<List<Product>> searchProduct(@RequestParam String name, @RequestParam int minPrice, @RequestParam int maxPrice) {
+        List<Product> listProduct = productService.findProductsByConditions(name,minPrice, maxPrice);
         if (listProduct.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
@@ -148,4 +148,27 @@ public class ProductController {
         Optional<Product> product = productService.findById(id);
         return new ResponseEntity<>(product,HttpStatus.OK);
     }
+
+    @GetMapping("/searchProductByName")
+    //gia giam dan
+    public ResponseEntity<List<Product>> searchProductByName(@RequestParam String name) {
+        List<Product> listProduct = productService.findByProductNameContaining(name);
+        if (listProduct.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(listProduct, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/searchProductByNamePrice")
+    //gia tang dan
+    public ResponseEntity<List<Product>> searchProductByNamePrice(@RequestParam String name) {
+        List<Product> listProduct = productService.findProductsByProductNameContaining(name);
+        if (listProduct.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(listProduct, HttpStatus.OK);
+        }
+    }
+
 }

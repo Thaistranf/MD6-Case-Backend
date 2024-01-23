@@ -3,6 +3,7 @@ package com.example.dailyshop.service.webservice.Order;
 import com.example.dailyshop.model.account.Account;
 import com.example.dailyshop.model.account.Supplier;
 import com.example.dailyshop.model.entity.*;
+import com.example.dailyshop.model.revenue.Revenue;
 import com.example.dailyshop.repository.data.OrderRepository;
 import com.example.dailyshop.service.AccountService;
 import com.example.dailyshop.service.SupplierService;
@@ -10,10 +11,12 @@ import com.example.dailyshop.service.webservice.CartService;
 import com.example.dailyshop.service.webservice.ProductService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.*;
 
 @Service
@@ -33,6 +36,9 @@ public class BillService {
     private ProductService productService;
     @Autowired
     private OrderDetailsService orderDetailsService;
+
+    private final Sort SORT_BY_TIME_DESC = Sort.by(Sort.Direction.DESC, "orderDate");
+
 
 
     public List<Order> paymentBillCustomer() {
@@ -100,7 +106,7 @@ public class BillService {
     public List<Order> getOrder() {
         //xem đơn hàng của khách hàng.
         Account currentAccount = accountService.getCurrentAccount();
-        List<Order> order = orderService.findOrderByAccountId(currentAccount.getId());
+        List<Order> order = orderService.findOrderByAccountId(currentAccount.getId(),SORT_BY_TIME_DESC);
         if (order.isEmpty()) {
             return null;
         } else {
@@ -111,7 +117,7 @@ public class BillService {
     public List<Order> getOrderBySupplier() {
         Account account = accountService.getCurrentAccount();
         Optional<Supplier> supplier = supplierService.findByAccountId(account.getId());
-        return orderRepository.findOrderBySupplierId(supplier.get().getId());
+        return orderRepository.findOrderBySupplierId(supplier.get().getId(),SORT_BY_TIME_DESC);
     }
 
     public Order updateOrderStatus(Long orderId, OrderStatus orderStatus) {
@@ -130,5 +136,11 @@ public class BillService {
         }
         orderService.save(order);
         return order;
+    }
+
+
+    public List<Map<Integer,Revenue>> getRevenueByMonth(){
+        Account account = accountService.getCurrentAccount();
+        return  orderDetailsService.getRevenueByMonth(account.getId());
     }
 }
