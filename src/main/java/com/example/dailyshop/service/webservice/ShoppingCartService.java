@@ -1,16 +1,11 @@
 package com.example.dailyshop.service.webservice;
 
 import com.example.dailyshop.model.account.Account;
-import com.example.dailyshop.model.entity.Order;
-import com.example.dailyshop.model.entity.OrderDetails;
-import com.example.dailyshop.model.entity.OrderStatus;
-import com.example.dailyshop.model.entity.Product;
+import com.example.dailyshop.model.entity.*;
 import com.example.dailyshop.repository.AccountRepository;
-import com.example.dailyshop.repository.data.OrderDetailsRepository;
-import com.example.dailyshop.repository.data.OrderRepository;
+import com.example.dailyshop.repository.data.CartRepository;
 import com.example.dailyshop.repository.data.ProductRepository;
 import com.example.dailyshop.service.AccountService;
-import org.aspectj.weaver.ast.Or;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,40 +19,36 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.example.dailyshop.model.entity.OrderStatus.Paid;
-import static com.example.dailyshop.model.entity.OrderStatus.Unpaid;
-
-
 @Service
 public class ShoppingCartService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private OrderRepository orderRepository;
+    private CartRepository cartRepository;
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
     private AccountService accountService;
     @Autowired
-    private OrderDetailsService orderDetailsService;
+    private CartDetailsService cartDetailsService;
 
-    public Order addProductToOrder(Long account_id, OrderDetails orderDetail) {
+    public Cart addProductToOrder(Long account_id, CartDetails orderDetail) {
         //thêm sản phẩm vào giỏ hàng.
-        Optional<Order> order = orderRepository.findOrderByAccountIdAndOrderStatus(account_id, Unpaid);
+        Optional<Cart> order = cartRepository.findCartByAccountId(account_id);
         Optional<Product> product = productRepository.findById(orderDetail.getProduct().getProductID());
-        Order orderNew;
+        Cart cartNew;
         if (order.isPresent()) {
-            orderNew = order.get();
+            cartNew = order.get();
         } else {
-            orderNew = new Order();
-            orderNew.setOrderDate(LocalDateTime.now());
-            orderNew.setOrderStatus(Unpaid);
-            orderNew.setOrderDetails(new HashSet<>());
+            cartNew = new Cart();
+            cartNew.setOrderDate(LocalDateTime.now());
+//            cartNew.setOrderStatus(Unpaid);
+            cartNew.setCartDetails(new HashSet<>());
             Account account = accountRepository.findById(account_id).get();
-            orderNew.setAccount(account);
+            cartNew.setAccount(account);
         }
         boolean flag = false;
-        for (OrderDetails item : orderNew.getOrderDetails()) {
+        for (CartDetails item : cartNew.getCartDetails()) {
             if (Objects.equals(item.getProduct().getProductID(), orderDetail.getProduct().getProductID())) {
                 item.setQuantity(item.getQuantity() + orderDetail.getQuantity());
                 flag = true;
@@ -66,81 +57,96 @@ public class ShoppingCartService {
         }
         if (!flag) {
             orderDetail.setProduct(product.get());
-            orderNew.getOrderDetails().add(orderDetail);
+            cartNew.getCartDetails().add(orderDetail);
         }
-        BigDecimal totalAmount = getTotalAmount(orderNew);
-        orderNew.setTotalAmount(totalAmount);
-        int countOrderDetails = getQuantityOrder(orderNew);
-        orderNew.setQuantity(countOrderDetails);
-        return orderRepository.save(orderNew);
+        BigDecimal totalAmount = getTotalAmount(cartNew);
+        cartNew.setTotalAmount(totalAmount);
+        int countOrderDetails = getQuantityOrder(cartNew);
+        cartNew.setQuantity(countOrderDetails);
+        return cartRepository.save(cartNew);
 
 
     }
 
     @NotNull
-    private static BigDecimal getTotalAmount(Order orderNew) {
+    private static BigDecimal getTotalAmount(Cart cartNew) {
         BigDecimal totalAmount = BigDecimal.valueOf(0);
-        for (OrderDetails item : orderNew.getOrderDetails()) {
+        for (CartDetails item : cartNew.getCartDetails()) {
             item.setPrice(item.getProduct().getPrice());
             totalAmount = totalAmount.add(BigDecimal.valueOf((long) item.getQuantity() * item.getPrice()));
         }
         return totalAmount;
     }
 
-    public Integer getQuantityOrder(Order order) {
+    public Integer getQuantityOrder(Cart cart) {
         int totalOrderDetails = 0;
-        for (OrderDetails count : order.getOrderDetails()) {
+        for (CartDetails count : cart.getCartDetails()) {
 //            count.setQuantity(count.getQuantity());
             totalOrderDetails = totalOrderDetails + count.getQuantity();
         }
         return totalOrderDetails;
     }
 
-    public ResponseEntity<Order> getCart() {
+    public ResponseEntity<Cart> getCart() {
         //xem giỏ hàng của khách hàng.
         Account currentAccount = accountService.getCurrentAccount();
-        Optional<Order> order = orderRepository.findOrderByAccountIdAndOrderStatus(currentAccount.getId(), Unpaid);
+        Optional<Cart> order = cartRepository.findCartByAccountId(currentAccount.getId());
         return order.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     public ResponseEntity<?> paymentOrder() {
         //thanh toan gio hang
         Account currentAccount = accountService.getCurrentAccount();
-        Optional<Order> order = orderRepository.findOrderByAccountIdAndOrderStatus(currentAccount.getId(), Unpaid);
-        Iterable<OrderDetails> orderDetails = orderDetailsService.findOrderDetailsByOrderId(order.get().getId());
+        Optional<Cart> order = cartRepository.findCartByAccountId(currentAccount.getId());
+        Iterable<CartDetails> orderDetails = cartDetailsService.findCartDetailsByCartId(order.get().getId());
         List<Product> products = productRepository.findAll();
         for (int i = 0; i < products.size(); i++) {
-            for (OrderDetails orderDetailsOld : orderDetails) {
-                if (Objects.equals(products.get(i).getProductID(), orderDetailsOld.getProduct().getProductID())) {
-                    products.get(i).setStockQuantity(products.get(i).getStockQuantity() - orderDetailsOld.getQuantity());
+            for (CartDetails cartDetailsOld : orderDetails) {
+                if (Objects.equals(products.get(i).getProductID(), cartDetailsOld.getProduct().getProductID())) {
+                    products.get(i).setStockQuantity(products.get(i).getStockQuantity() - cartDetailsOld.getQuantity());
                     productRepository.save(products.get(i));
                     break;
                 }
             }
         }
-        order.get().setOrderStatus(Paid);
-        orderRepository.save(order.get());
+        cartRepository.save(order.get());
         return order.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
 
     public ResponseEntity<?> removeOrderDetail(Long orderDetailId) {
         Account account = accountService.getCurrentAccount();
-        Optional<Order> order = orderRepository.findOrderByAccountIdAndOrderStatus(account.getId(), Unpaid);
+        Optional<Cart> order = cartRepository.findCartByAccountId(account.getId());
 
         if (order.isPresent()) {
             if (!Objects.equals(order.get().getAccount().getId(), account.getId())) {
                 return new ResponseEntity<>("Access Denied", HttpStatus.FORBIDDEN);
             }
-            for (OrderDetails details : order.get().getOrderDetails()) {
+            for (CartDetails details : order.get().getCartDetails()) {
                 if (Objects.equals(details.getId(), orderDetailId)) {
-                    order.get().getOrderDetails().remove(details);
-                    order.get().setQuantity(getQuantityOrder(order.get()));
+                    order.get().getCartDetails().remove(details);
+                    order.get().setQuantity(order.get().getCartDetails().size());
                     order.get().setTotalAmount(getTotalAmount(order.get()));
-                    return new ResponseEntity<>(orderRepository.save(order.get()), HttpStatus.OK);
+                    return new ResponseEntity<>(cartRepository.save(order.get()), HttpStatus.OK);
                 }
             }
         }
-        return new ResponseEntity<>("Can't remove orderDetails",HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Can't remove orderDetails", HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<?> findOrderCustomerPaid() {
+        Account account = accountService.getCurrentAccount();
+        List<Cart> carts = cartRepository.findOrderByAccount(account);
+        if (carts.isEmpty()) {
+            return new ResponseEntity<>("Null Data", HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(carts, HttpStatus.OK);
+        }
+    }
+
+    public Integer countDetails(){
+        Account account = accountService.getCurrentAccount();
+        Optional<Cart> cart = cartRepository.findCartByAccountId(account.getId());
+        return cartDetailsService.countCartDetailsByCartId(cart.get().getId());
     }
 }

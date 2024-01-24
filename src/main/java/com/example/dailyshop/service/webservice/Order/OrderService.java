@@ -1,9 +1,11 @@
-package com.example.dailyshop.service.webservice;
+package com.example.dailyshop.service.webservice.Order;
 
+import com.example.dailyshop.model.account.Account;
 import com.example.dailyshop.model.entity.Order;
 import com.example.dailyshop.model.entity.OrderStatus;
 import com.example.dailyshop.repository.data.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,10 +15,9 @@ import java.util.Optional;
 public class OrderService implements IOrderService {
     @Autowired
     private OrderRepository orderRepository;
-
     @Override
     public List<Order> findAll() {
-        return orderRepository.findAll();
+        return null;
     }
 
     @Override
@@ -35,9 +36,18 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Optional<Order> findOrderByAccountIdAndOrderStatus(Long account_id, OrderStatus orderStatus) {
-        return orderRepository.findOrderByAccountIdAndOrderStatus(account_id, orderStatus);
+    public List<Order> findOrderByAccountId(Long accountId, Sort sort) {
+        return orderRepository.findOrderByAccountId(accountId,sort);
+    }
+
+    @Override
+    public List<Order> findOrderBySupplierId(Long supplierId,Sort sort) {
+        return orderRepository.findOrderBySupplierId(supplierId,sort);
     }
 
 
+    @Override
+    public Optional<Order> findOrderByAccountIdAndSupplierIdAndOrderStatus(Long account_id, Long supplier_id, OrderStatus orderStatus) {
+        return orderRepository.findOrderByAccountIdAndSupplierIdAndOrderStatus(account_id,supplier_id,orderStatus);
+    }
 }

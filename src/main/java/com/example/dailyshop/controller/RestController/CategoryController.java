@@ -30,26 +30,27 @@ public class CategoryController {
     }
 
     @PostMapping("/createCategory")
-    public ResponseEntity<Category> createCategory(@RequestBody Category category){
+    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
         Category categoryNew = categoryService.save(category);
-        return new ResponseEntity<>(categoryNew,HttpStatus.OK);
+        return new ResponseEntity<>(categoryNew, HttpStatus.OK);
     }
 
     @PutMapping("/editCategory/{id}")
-    public ResponseEntity<Category> editCategory(@PathVariable Long id, @RequestBody Category category){
+    public ResponseEntity<Category> editCategory(@PathVariable Long id, @RequestBody Category category) {
         category.setId(id);
         Category categoryEdit = categoryService.save(category);
-        return new ResponseEntity<>(categoryEdit,HttpStatus.OK);
+        return new ResponseEntity<>(categoryEdit, HttpStatus.OK);
     }
+
     @DeleteMapping("/deleteCategory/{id}")
-    public ResponseEntity<Category> removeCategory(@PathVariable Long id){
+    public ResponseEntity<Category> removeCategory(@PathVariable Long id) {
         categoryService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/findByIdCategory/{id}")
-    public ResponseEntity<Optional<Category>> findByIdCategory(@PathVariable Long id){
+    public ResponseEntity<Optional<Category>> findByIdCategory(@PathVariable Long id) {
         Optional<Category> category = categoryService.findById(id);
-        return new ResponseEntity<>(category,HttpStatus.OK);
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
 }
