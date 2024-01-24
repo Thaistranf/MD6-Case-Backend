@@ -88,4 +88,10 @@ public class CartController {
             return new ResponseEntity<>(count,HttpStatus.OK);
         }
     }
+
+    @PutMapping("/account/updateCartDetail/{cartDetailId}")
+    public ResponseEntity<?> updateCartDetail(@PathVariable Long cartDetailId, @RequestParam int quantity){
+        cartService.updateCartDetail(cartDetailId,quantity);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
