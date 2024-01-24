@@ -12,6 +12,9 @@ import java.util.List;
 public interface IProductService extends IGenerateService<Product> {
     List<Product> findProductByproductNameContaining(String name);
 
+
+    List<Product> findAllByCategoryId(Long id);
+
     List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted, Sort sort);
 
     Page<Product> findAllByIsDeleted(boolean deleted, Pageable pageable);
@@ -25,5 +28,4 @@ public interface IProductService extends IGenerateService<Product> {
 
     @Query(value = "select ord.product, p.productName,sum(ord.quantity) as totalQuantity from OrderDetails ord join Product p on p.productID = ord.product.productID join Order o on o.orderId = ord.orderId where o.orderStatus = 'Paid' group by p.productName,ord.product order by totalQuantity desc limit 5")
     List<Product> findTop5Products();
-
 }
