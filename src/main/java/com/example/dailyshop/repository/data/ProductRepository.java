@@ -38,8 +38,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findProductsByProductNameContaining(@Param("name") String name);
 
     List<Product> findAllByIsDeleted(boolean deleted);
-  
-    List<Product> findAllByCategoryId(Long id);
+
 
     @Query(value = "select ord.product, p.productName,sum(ord.quantity) as totalQuantity from OrderDetails ord join Product p on p.productID = ord.product.productID join Order o on o.orderId = ord.orderId where o.orderStatus = 'Paid' group by p.productName,ord.product order by totalQuantity desc limit 5")
     List<Product> findTop5Products();
