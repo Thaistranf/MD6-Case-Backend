@@ -73,9 +73,8 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/login", "/register", "/suppliers/register", "/customer/register", "/api/**", "/getAllProduct","/searchProduct","/getProductTop","/getProductById/**","/getAllProductIsDeleted","/products/**", "/categories/**", "/category/**").permitAll()
+                                .requestMatchers("/login", "/register", "/suppliers/register", "/customer/register", "/api/**", "/getAllProduct","/searchProduct","/getProductTop","/getProductById/**","/getAllProductIsDeleted","/products/**","/searchProductByName","/searchProductByNamePrice", "/categories/**", "/category/**").permitAll()
                                 .requestMatchers("/customer/**", "/account/**", "/api/**","/getOrderCustomer","/account/order").hasAnyAuthority("ROLE_CUSTOMER")
-                                .requestMatchers("/customer/**", "/account/**", "/api/**").hasAnyAuthority("ROLE_CUSTOMER")
                                 .requestMatchers("/admin/**", "/account/**").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers("/suppliers/**", "/account/**", "/api/**").hasAnyAuthority("ROLE_SUPPLIER")
 //                        .requestMatchers(HttpMethod.GET).hasAnyRole("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")

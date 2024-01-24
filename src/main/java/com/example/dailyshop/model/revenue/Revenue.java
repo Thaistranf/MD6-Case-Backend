@@ -1,4 +1,4 @@
-package com.example.dailyshop.model.entity;
+package com.example.dailyshop.model.revenue;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
