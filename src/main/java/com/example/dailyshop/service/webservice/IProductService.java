@@ -17,6 +17,7 @@ public interface IProductService extends IGenerateService<Product> {
 
     List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted, Sort sort);
 
+
     Page<Product> findAllByIsDeleted(boolean deleted, Pageable pageable);
 
 

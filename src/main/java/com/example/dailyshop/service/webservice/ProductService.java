@@ -18,7 +18,6 @@ public class ProductService implements IProductService {
     private ProductRepository productRepository;
     private final Sort SORT_BY_TIME_DESC = Sort.by(Sort.Direction.DESC, "createAt");
 
-
     @Override
     public List<Product> findAll() {
         return productRepository.findAllByIsDeleted(false, SORT_BY_TIME_DESC);
@@ -46,6 +45,8 @@ public class ProductService implements IProductService {
     }
 
 
+
+
     @Override
     public List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted, Sort sort) {
         return productRepository.findProductByAccountIdAndIsDeleted(id, deleted, SORT_BY_TIME_DESC);
@@ -70,6 +71,11 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> findTop5Products() {
         return productRepository.findTop5Products();
+    }
+
+    @Override
+    public List<Product> findAllByCategoryId(Long id) {
+        return productRepository.findAllByCategoryId(id);
     }
 
     public List<Product> findProductsByName(String name) {
