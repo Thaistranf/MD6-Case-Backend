@@ -14,6 +14,7 @@ public interface IProductService extends IGenerateService<Product> {
 
     List<Product> findProductByAccountIdAndIsDeleted(Long id, boolean deleted, Sort sort);
 
+
     Page<Product> findAllByIsDeleted(boolean deleted, Pageable pageable);
 
     @Query("SELECT p FROM Product p JOIN Category c ON p.category.id = c.id WHERE p.productName LIKE %:productName% AND p.isDeleted = false AND EXISTS (SELECT 1 FROM Product subp WHERE subp.productName = p.productName AND subp.category = p.category AND subp.price BETWEEN :minPrice AND :maxPrice)")
