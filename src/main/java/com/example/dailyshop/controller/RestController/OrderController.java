@@ -26,7 +26,7 @@ public class OrderController {
         return new ResponseEntity<>(ord, HttpStatus.OK);
     }
 
-    @GetMapping("/account/order")
+    @GetMapping(" ")
     // lay ra hoa don theo tai khoan
     public ResponseEntity<?> getOrderCustomer() {
         List<Order> orders = billService.getOrder();
@@ -50,9 +50,9 @@ public class OrderController {
 
     @PutMapping("/suppliers/updateOrder/{id}")
     // sua trang thai don hang theo ID don hang
-    public ResponseEntity<?> orderUpdate(@PathVariable Long id, @RequestBody OrderStatus orderStatus) {
-        Order order = billService.updateOrderStatus(id, orderStatus);
-        return new ResponseEntity<>(order, HttpStatus.OK);
+    public ResponseEntity<?> orderUpdate(@PathVariable Long id, @RequestBody Order order) {
+        Order orders = billService.updateOrderStatus(id, order.getOrderStatus());
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
     @GetMapping("/suppliers/totalRevenue")

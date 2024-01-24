@@ -81,17 +81,6 @@ public class ProductController {
         }
     }
 
-//    @GetMapping("/searchProduct")
-//    //Tìm kiếm sản phẩm theo tên gần đúng, theo nhà cung cấp, tìm trong khoảng giá thấp nhất và cao nhất.
-//    public ResponseEntity<List<Product>> searchProduct(@RequestParam String name, @RequestParam int minPrice, @RequestParam int maxPrice) {
-//        List<Product> listProduct = productService.findProductsByConditions(name,minPrice, maxPrice);
-//        if (listProduct.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        } else {
-//            return new ResponseEntity<>(listProduct, HttpStatus.OK);
-//        }
-//    }
-
     @GetMapping("/searchProduct")
     public ResponseEntity<List<Product>> searchProduct(@RequestParam String name, @RequestParam(required = false) Integer minPrice, @RequestParam(required = false) Integer maxPrice) {
         List<Product> listProduct;
@@ -110,8 +99,6 @@ public class ProductController {
             return new ResponseEntity<>(listProduct, HttpStatus.OK);
         }
     }
-
-
 
     @GetMapping("/getProductById/{id}")
     //Tìm kiếm thông tin một sản phẩm
@@ -135,6 +122,17 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(products, HttpStatus.OK);
+        }
+    }
+
+
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<Product>> findAllByCategoryId(@PathVariable Long id) {
+        List<Product> productListByCategoryId = productService.findAllByCategoryId(id);
+        if (productListByCategoryId.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(productListByCategoryId, HttpStatus.OK);
         }
     }
 
@@ -173,10 +171,11 @@ public class ProductController {
             }
         }
     }
+
     @GetMapping("/products/{id}")
-    public ResponseEntity<Optional<Product>> getProductById(@PathVariable Long id){
+    public ResponseEntity<Optional<Product>> getProductById(@PathVariable Long id) {
         Optional<Product> product = productService.findById(id);
-        return new ResponseEntity<>(product,HttpStatus.OK);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @GetMapping("/searchProductByName")
@@ -200,5 +199,6 @@ public class ProductController {
             return new ResponseEntity<>(listProduct, HttpStatus.OK);
         }
     }
+
 
 }
