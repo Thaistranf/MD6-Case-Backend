@@ -149,4 +149,20 @@ public class ShoppingCartService {
         Optional<Cart> cart = cartRepository.findCartByAccountId(account.getId());
         return cartDetailsService.countCartDetailsByCartId(cart.get().getId());
     }
+
+    public void updateCartDetail(Long cartDetailsId,int quantityNew){
+        Account account = accountService.getCurrentAccount();
+        Optional<Cart> cart = cartRepository.findCartByAccountId(account.getId());
+        Cart cartNew;
+
+        for (CartDetails detail: cart.get().getCartDetails()) {
+            if(Objects.equals(detail.getId(), cartDetailsId)){
+                detail.setQuantity(quantityNew);
+                cartDetailsService.save(detail);
+            }
+        }
+        cart.get().setQuantity(getQuantityOrder(cart.get()));
+        cart.get().setTotalAmount(getTotalAmount(cart.get()));
+        cartRepository.save(cart.get());
+    }
 }
