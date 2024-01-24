@@ -71,4 +71,8 @@ public class ProductService implements IProductService {
     public List<Product> findTop5Products() {
         return productRepository.findTop5Products();
     }
+
+    public List<Product> findProductsByName(String name) {
+        return productRepository.findProductsByProductNameContaining(name);
+    }
 }

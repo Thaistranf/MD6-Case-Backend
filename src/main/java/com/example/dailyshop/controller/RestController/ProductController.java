@@ -81,6 +81,24 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/searchProduct")
+    public ResponseEntity<List<Product>> searchProduct(@RequestParam String name, @RequestParam(required = false) Integer minPrice, @RequestParam(required = false) Integer maxPrice) {
+        List<Product> listProduct;
+
+        if (minPrice != null && maxPrice != null) {
+            // Nếu cả minPrice và maxPrice được nhập, thực hiện tìm kiếm theo tất cả các điều kiện
+            listProduct = productService.findProductsByConditions(name, minPrice, maxPrice);
+        } else {
+            // Nếu không có giá trị cho minPrice hoặc maxPrice, chỉ tìm kiếm theo tên sản phẩm
+            listProduct = productService.findProductsByName(name);
+        }
+
+        if (listProduct.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(listProduct, HttpStatus.OK);
+        }
+    }
 
     @GetMapping("/getProductById/{id}")
     //Tìm kiếm thông tin một sản phẩm
