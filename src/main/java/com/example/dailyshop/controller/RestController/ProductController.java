@@ -81,16 +81,36 @@ public class ProductController {
         }
     }
 
+//    @GetMapping("/searchProduct")
+//    //Tìm kiếm sản phẩm theo tên gần đúng, theo nhà cung cấp, tìm trong khoảng giá thấp nhất và cao nhất.
+//    public ResponseEntity<List<Product>> searchProduct(@RequestParam String name, @RequestParam int minPrice, @RequestParam int maxPrice) {
+//        List<Product> listProduct = productService.findProductsByConditions(name,minPrice, maxPrice);
+//        if (listProduct.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        } else {
+//            return new ResponseEntity<>(listProduct, HttpStatus.OK);
+//        }
+//    }
+
     @GetMapping("/searchProduct")
-    //Tìm kiếm sản phẩm theo tên gần đúng, theo nhà cung cấp, tìm trong khoảng giá thấp nhất và cao nhất.
-    public ResponseEntity<List<Product>> searchProduct(@RequestParam String name, @RequestParam int minPrice, @RequestParam int maxPrice) {
-        List<Product> listProduct = productService.findProductsByConditions(name,minPrice, maxPrice);
+    public ResponseEntity<List<Product>> searchProduct(@RequestParam String name, @RequestParam(required = false) Integer minPrice, @RequestParam(required = false) Integer maxPrice) {
+        List<Product> listProduct;
+
+        if (minPrice != null && maxPrice != null) {
+            // Nếu cả minPrice và maxPrice được nhập, thực hiện tìm kiếm theo tất cả các điều kiện
+            listProduct = productService.findProductsByConditions(name, minPrice, maxPrice);
+        } else {
+            // Nếu không có giá trị cho minPrice hoặc maxPrice, chỉ tìm kiếm theo tên sản phẩm
+            listProduct = productService.findProductsByName(name);
+        }
+
         if (listProduct.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(listProduct, HttpStatus.OK);
         }
     }
+
 
 
     @GetMapping("/getProductById/{id}")
